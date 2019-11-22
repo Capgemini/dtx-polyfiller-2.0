@@ -290,12 +290,19 @@ function injectAutoFillButton() {
 // Attempts to fill tasknumber with user's default if nothing is entered yet
 function autoFillTaskNumber(taskNumber) {
 	let taskInput = document.getElementById("txtTaskNumber");
-	if (taskInput !== undefined && taskInput.value == "") taskInput.value = taskNumber;
+	if (!!taskInput && taskInput.value == "") taskInput.value = taskNumber;
 }
 // Attempts to fill project code with user's default if nothing is entered yet
 function autoFillProjectCode(projectCode) {
 	let projectInput = document.getElementById("drpProjectCode_input");
-	if (projectInput !== undefined && projectInput.value == "") projectInput.value = projectCode;
+	if (!!projectInput && projectInput.value == "") projectInput.value = projectCode;
+}
+
+
+// Returns true if the page contains the menubar of buttons
+// (buttons including adding time, delete, copy, paste etc)
+function pageContainsMenuBar() {
+	return !!document.getElementById("jsddm_summary") || !!document.getElementById("jsddm_item");
 }
 
 
@@ -364,15 +371,19 @@ chrome.storage.sync.get({
 	
 	fixMissingButtons();
 	fixInputEventHandlers();
-	injectStandardUKTimeButton();
+	
+	// Only inject if the page has a menubar of buttons
+	if (pageContainsMenuBar()) injectStandardUKTimeButton();
 
 	if (items.shortcutKeys) injectShortcutKeys();
 
 
 	// Check calender is on page before injecting calender features
 	if (!!document.getElementById("calDates_tabCalendar")) {
-		injectCustomButtonsContainer();
-		injectAutoFillButton();
+		if (pageContainsMenuBar()) {
+			injectCustomButtonsContainer();
+			injectAutoFillButton();
+		}
 		
 		if (items.autoFillFields) {
 			autoFillTaskNumber(items.autoFillTaskNumber);
@@ -393,7 +404,7 @@ chrome.storage.sync.get({
 			
 			if (items.showBankHolidays) handleShowBankHolidays(myBankHolidays);
 			
-			loadSelectMode(items.selectMode); // Inject checkbox mode
+			if (pageContainsMenuBar()) loadSelectMode(items.selectMode); // Inject checkbox mode
 		});
 	}
 	
