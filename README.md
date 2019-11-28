@@ -1,63 +1,27 @@
-# DTX-Polyfiller
+# DTX-Polyfiller 2
+Many thanks to the original [DTX Polyfiller extension](https://github.com/Capgemini/dtx-polyfiller/). To rapidly deploy new builds and move away from Yarn I've created my own fork.
 
-This Chrome (And firefox!) extension rewrites a few input events from "onpropertychange" to "onchange" - 
-whilst also implementing minor other CSS/JS patches for legacy tools.
+## Installation (Chrome)
+Click [here](https://chrome.google.com/webstore/detail/mbdlbjpimeeemdhkehileedfdemdlogk) to install for Chrome!
 
-Also overrides a number of functions in the claims submission process to remove IE specific XML/XPath usage.
+## Installation (Firefox)
+My extension doesn't currently support Firefox. If anyone would like compatibility, just let me know!
 
-## Installation (CHROME - New Style)
+# Features
+- Fix Chrome compatiblity for submitting claims 
+- Fixed input field bugs
+- Graphical fixes
+- Work days select mode (auto-fills 7.5 hrs)
 
-We're on the chrome web store! Just install here:
-[https://chrome.google.com/webstore/detail/ndjmplgjbibmifkajogmngpekcnammpb](https://chrome.google.com/webstore/detail/ndjmplgjbibmifkajogmngpekcnammpb)
-
-
-## Installation (Firefox!)
-
-1) [Right-Click Here and "Save Link As"](https://capgemini.github.io/dtx-polyfiller/dtx-polyfiller.xpi)
-
-2) In Firefox, open the Firefox menu Firefox browser menu button and click Add-ons.
-
-3) From the settings cog, open Install Add-on From File.
-
-4) Select the XPI file you just downloaded and click "Add"
-
-## Installation (CHROME - old style)
-
-1) [Right-Click Here and "Save Link As"](https://capgemini.github.io/dtx-polyfiller/dtx-polyfiller.crx)
-
-2) Go to https://robwu.nl/crxviewer/
-
-3) Click browse button and then locate and select the 'dtx-polyfiller.crx' file saved in step 1.
-
-4) Click the download button in the top-right of the screen
-
-5) Locate this file on your computer (will be named 'dtx-polyfiller.zip') and double click on it to unzip the file
-
-6) Visit the following URL in Chrome: chrome://extensions
-
-7) Toggle developer mode on in the top-right then click 'load unpacked'
-
-8) Locate and select the folder created when you unzipped the 'dtx-polyfiller.zip' file
-
-## Development
-
-
-1) Install Node/Yarn
-
-2) Run `yarn`
-
-3) Populate .env based on example.env template
-
-4) Run yarn build
-
+## Polyfiller 2 new features
+- Show bank holidays
+- Auto-login
+- Workdays select mode major improvements
+- Auto-fill month: Work days, all and clear
+- Auto-fill task number & project code
+- Shortcut keys (`CTRL+S`: save, `ESC`: home)
+- Shortcut button to add "Standard Time in UK"
+- Graphical improvements and fixes
 
 ## Issues
-
-If you find a bug, raise it as a GitHub issue here:
-
-[https://github.com/Capgemini/dtx-polyfiller](https://github.com/Capgemini/dtx-polyfiller)
-
-
-For other issues, contact Dan Cotton:
-
-[https://github.com/daniel-cotton](https://github.com/daniel-cotton)
+If you find a bug, please [raise an issue](../../issues)!
