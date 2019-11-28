@@ -18,6 +18,7 @@ Many thanks to the original [DTX Polyfiller extension](https://github.com/Capgem
 - Graphical improvements and fixes
 
 <br />
+
 ## Installation (Chrome)
 Click [here](https://chrome.google.com/webstore/detail/mbdlbjpimeeemdhkehileedfdemdlogk) to install for Chrome!
 
