@@ -1,7 +1,7 @@
 # DTX-Polyfiller 2
 Many thanks to the original [DTX Polyfiller extension](https://github.com/Capgemini/dtx-polyfiller/). To rapidly deploy new builds and move away from Yarn I've created my own fork.
 
-# Features
+## Polyfiller features
 - Fix Chrome compatiblity for submitting claims 
 - Fixed input field bugs
 - Graphical fixes
