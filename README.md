@@ -20,8 +20,10 @@ Many thanks to the original [DTX Polyfiller extension](https://github.com/Capgem
 <br />
 
 ## Installation
-Click [here](https://chrome.google.com/webstore/detail/mbdlbjpimeeemdhkehileedfdemdlogk) to install on Chrome!
-Click [here](https://addons.mozilla.org/en-US/firefox/addon/dtx-polyfiller-2/) to install on Firefox!
+|     |     |
+| --- | --- |
+| Chrome   | [Install extension](https://chrome.google.com/webstore/detail/mbdlbjpimeeemdhkehileedfdemdlogk) |
+| Firefox  | [Install addon](https://addons.mozilla.org/en-US/firefox/addon/dtx-polyfiller-2/)               |
 
 <br />
 <br />
