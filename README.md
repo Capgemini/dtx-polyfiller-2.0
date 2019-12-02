@@ -23,7 +23,7 @@ Many thanks to the original [DTX Polyfiller extension](https://github.com/Capgem
 |     |     |
 | --- | --- |
 | Chrome   | [Install extension](https://chrome.google.com/webstore/detail/mbdlbjpimeeemdhkehileedfdemdlogk) |
-| Firefox  | [Install addon](https://addons.mozilla.org/en-US/firefox/addon/dtx-polyfiller-2/)               |
+| Firefox  | **Currently unsupported**)               |
 
 <br />
 <br />
