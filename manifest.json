@@ -1,61 +1,61 @@
 {
-   "name":"DTX Polyfiller 2",
-   "description":"Fix DTX for Chrome and add a plethora of useful features!",
-   "version":"2.5.0",
-   "manifest_version":2,
-   "permissions":[
+	"name":"DTX Polyfiller 2",
+	"description":"Fix DTX for Chrome and add a plethora of useful features!",
+	"version":"2.6.0",
+	"manifest_version":2,
+	"permissions":[
 		"storage",
-      "webRequest",
-      "webRequestBlocking",
-      "http://*.uki.capgemini.com/*",
-      "https://*.uki.capgemini.com/*",
-      "http://*.corp.capgemini.com/*",
-      "https://*.corp.capgemini.com/*",
-      "*://missbhasil01.corp.capgemini.com/*"
-   ],
-   "background":{
-      "scripts":[
-         "silhouette/silhouette.js"
-      ],
-      "persistent":true
-   },
-   "content_scripts":[
-      {
-         "matches":[
-            "http://*.uki.capgemini.com/*",
-            "https://*.uki.capgemini.com/*",
-            "http://*.corp.capgemini.com/*",
-            "https://*.corp.capgemini.com/*",
-            "*://missbhasil01.corp.capgemini.com/*"
-         ],
-         "css":[
-            "dtx.css"
-         ],
-         "js":[
-            "dtx.js"
-         ]
-      },
-      {
-         "matches":[
-            "http://*.uki.capgemini.com/*/SubmitClaims.aspx",
-            "https://*.uki.capgemini.com/*/SubmitClaims.aspx",
-            "http://*.corp.capgemini.com/*/SubmitClaims.aspx",
-            "https://*.corp.capgemini.com/*/SubmitClaims.aspx"
-         ],
-         "js":[
-            "submit-claims/submit-claims-injector.js"
-         ]
-      }
-   ],
-   "options_ui": {
-		"page": "options.html",
-		"open_in_tab": false
+		"webRequest",
+		"webRequestBlocking",
+		"http://*.uki.capgemini.com/*",
+		"https://*.uki.capgemini.com/*",
+		"http://*.corp.capgemini.com/*",
+		"https://*.corp.capgemini.com/*",
+		"*://missbhasil01.corp.capgemini.com/*"
+	],
+	"background":{
+		"scripts":[
+			"silhouette/silhouette.js"
+		],
+		"persistent":true
 	},
-	"browser_action": {
-      "default_popup": "options.html"
-    },
-   "web_accessible_resources":[
-      "submit-claims/submit-claims-overrides.js",
-	  "images/*"
-   ]
+	"content_scripts":[
+		{
+			"matches":[
+				"http://*.uki.capgemini.com/*",
+				"https://*.uki.capgemini.com/*",
+				"http://*.corp.capgemini.com/*",
+				"https://*.corp.capgemini.com/*",
+				"*://missbhasil01.corp.capgemini.com/*"
+			],
+			"css":[
+				"dtx.css"
+			],
+			"js":[
+				"dtx.js"
+			]
+		},
+		{
+			"matches":[
+				"http://*.uki.capgemini.com/*/SubmitClaims.aspx",
+				"https://*.uki.capgemini.com/*/SubmitClaims.aspx",
+				"http://*.corp.capgemini.com/*/SubmitClaims.aspx",
+				"https://*.corp.capgemini.com/*/SubmitClaims.aspx"
+			],
+			"js":[
+				"submit-claims/submit-claims-injector.js"
+			]
+		}
+	],
+	"options_ui":{
+		"page":"options.html",
+		"open_in_tab":false
+	},
+	"browser_action":{
+		"default_popup":"options.html"
+	},
+	"web_accessible_resources":[
+		"submit-claims/submit-claims-overrides.js",
+		"images/*"
+	]
 }

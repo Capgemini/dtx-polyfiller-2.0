@@ -1,3 +1,4 @@
+
 let setting_apiURL = "https://www.gov.uk/bank-holidays.json"; // URL to fetch up to date bank holidays
 
 
@@ -35,9 +36,8 @@ function loadSelectMode(defaultMode) {
 	let checkboxes = inputs.map(input => {
 		let checkbox = document.createElement("input");
 		checkbox.setAttribute("type", "checkbox");
+		checkbox.classList.add("polyfillerCheckbox");
 		checkbox.style.display = "none";
-		checkbox.style.width = "25px";
-		checkbox.style.height = "25px";
 		
 		// Darken weekend checkboxes
 		if (input.style["background-color"] === "rgb(225, 225, 225)") {
@@ -89,6 +89,8 @@ function loadSelectMode(defaultMode) {
 		inputs.forEach(combo => combo.style.display = enabled ? "none" : "block");
 		
 		if (enabled) {
+			document.getElementById("calDates_tabCalendar").classList.add("selectionTooltip");
+			
 			inputs.forEach(function(input, index) {
 				let checkbox = input.nextElementSibling;
 				
@@ -103,6 +105,9 @@ function loadSelectMode(defaultMode) {
 					checkbox.classList.remove("semiChecked");
 				}
 			});
+		} else {
+			// Add tip to tell user how to quickly change multiple checkboxes
+			document.getElementById("calDates_tabCalendar").classList.remove("selectionTooltip");
 		}
 	}
 	
@@ -355,6 +360,82 @@ function injectStandardUKTimeButton() {
 }
 
 
+
+// Event handler to update flags that represent which mouse buttons are pressed
+var lmbDown = false;
+var rmbDown = false;
+var selectingCheckboxes = false; // Flag to disable text selection during checkbox selection
+function setLeftButtonState(e) {
+	lmbDown = e.buttons === undefined 
+		? e.which === 1 
+		: e.buttons === 1;
+	
+	rmbDown = e.buttons === undefined 
+			? e.which === 3
+			: e.buttons === 2;
+	
+	// If both buttons are released, checkboxes are no longer being selected
+	if (!lmbDown && !rmbDown) selectingCheckboxes = false;
+}
+
+// Credit to https://stackoverflow.com/questions/36754940/check-multiple-checkboxes-with-click-drag
+// Credit to http://stackoverflow.com/questions/322378/javascript-check-if-mouse-button-down
+var checkboxChanged = false; // Flag to block context menu showing
+function check(checkbox) {
+	if (lmbDown) {
+		//checkbox.checked = !box.checked; // toggle check state
+		checkbox.checked = 1;
+	} else if (rmbDown) {
+		checkbox.checked = 0;
+		checkboxChanged = true;
+	}
+	
+	// Update checkboxes being selected flag
+	selectingCheckboxes = true;
+}
+
+// Disable text selection while selecting checkboxes
+function disableSelect(event) {
+	if (selectingCheckboxes) {
+		event.preventDefault();
+	}
+}
+
+// Allows user to click and drag to select/deselect checkboxes using
+// left and right mouse buttons
+function injectDraggingCheckboxSelection() {
+	// Setup mouse click events
+	document.body.onmousedown = setLeftButtonState;
+	document.body.onmousemove = setLeftButtonState;
+	document.body.onmouseup = setLeftButtonState;
+	
+	window.addEventListener('selectstart', disableSelect);
+
+	// Block right-click menu if deselecting checkboxes
+	document.oncontextmenu = function(e){
+		if (checkboxChanged) {
+			checkboxChanged = false;
+			event.preventDefault();
+			return false;
+		}
+	}
+	
+	// Find all checkboxes
+	// var checkboxes = document.getElementsByClassName("polyfillerCheckbox");
+	var checkboxes = document.querySelectorAll('input[type=checkbox]');
+	
+	// Add hover handler to all checkboxes' parents (for easier selection) on page
+	checkboxes.forEach(checkbox =>
+		checkbox.parentNode.addEventListener("mouseover", function(event) {
+			check(checkbox)
+		})
+	);
+}
+
+
+
+
+
 chrome.storage.sync.get({
 	shortcutKeys: true,
 	selectMode: true,
@@ -404,7 +485,10 @@ chrome.storage.sync.get({
 			
 			if (items.showBankHolidays) handleShowBankHolidays(myBankHolidays);
 			
-			if (pageContainsMenuBar()) loadSelectMode(items.selectMode); // Inject checkbox mode
+			if (pageContainsMenuBar()) {
+				loadSelectMode(items.selectMode); // Inject checkbox mode
+				injectDraggingCheckboxSelection();
+			}			
 		});
 	}
 	

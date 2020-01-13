@@ -1,5 +1,5 @@
 #dgHolidaySubmitClaims_main, #dgHolidaySubmitClaims_main td, #dgHolidaySubmitClaims_div {
-  height: auto!important;
+  height: auto !important;
 }
 
 
@@ -55,6 +55,20 @@ span.dtxTitle {
 	user-select: none;
 }
 
+/* Injectable selection tip class for calDates_tabCalendar */
+.selectionTooltip {
+	position: relative;
+}
+.selectionTooltip:after {
+	content: "Left-click drag to select\ARight-click drag to deselect";
+	white-space: pre; /* Add support for \A for newlines */
+	position: absolute;
+	right: 0;
+	
+	text-align: right;
+	color: #000;
+	text-size: 8px;
+}
 
 /* Weekend stylings for checkboxes */
 input[type=checkbox].weekend {
@@ -76,6 +90,10 @@ input[type=text].bankHolidayDay {
 }
 
 /* Style checkboxes */
+input[type=checkbox].polyfillerCheckbox {
+	width: 25px;
+	height: 25px;
+}
 input[type=checkbox].bankHolidayDay {
 	position: relative;
 	filter: brightness(0.85) sepia(1) saturate(200%); /* Make checkbox yellow maintaining browser checkbox style */
