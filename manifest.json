@@ -1,7 +1,7 @@
 {
 	"name":"DTX Polyfiller 2",
 	"description":"Fix DTX for Chrome and add a plethora of useful features!",
-	"version":"2.6.0",
+	"version":"2.6.2",
 	"manifest_version":2,
 	"permissions":[
 		"storage",
