@@ -4,7 +4,12 @@ Many thanks to the original [DTX Polyfiller extension](https://github.com/Capgem
 <img
   src="https://raw.githubusercontent.com/FreddieDev/dtx-polyfiller/master/previews/Quick%20selection.gif"
   alt="Preview of quick day selection"
-  width="220"
+  height="270"
+/>
+<img
+  src="https://raw.githubusercontent.com/FreddieDev/dtx-polyfiller/master/previews/Settings.png"
+  alt="Preview of settings"
+  height="270"
 />
 
 ## Original features
