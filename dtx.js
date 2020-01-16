@@ -34,6 +34,9 @@ function loadSelectMode(defaultMode) {
 	let inputs = [...document.querySelectorAll("#calDates_tabCalendar > tbody input")];
 
 	let checkboxes = inputs.map(input => {
+		// Disable inputs being dragged
+		input.parentElement.ondragstart = function() { return false };
+		
 		let checkbox = document.createElement("input");
 		checkbox.setAttribute("type", "checkbox");
 		checkbox.classList.add("polyfillerCheckbox");
