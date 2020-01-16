@@ -24,11 +24,12 @@ Many thanks to the original [DTX Polyfiller extension](https://github.com/Capgem
 ### My additions
 - Show bank holidays
 - Auto-login
-- Workdays select mode major improvements
+- Workdays select mode major improvements and fixes
+- Workdays select mode click-drag selection
 - Auto-fill month: Work days, all and clear
 - Auto-fill task number & project code
 - Shortcut keys (`CTRL+S`: save, `ESC`: home)
-- Shortcut button to add "Standard Time in UK"
+- Menubar shortcut button to add "Standard Time in UK"
 - Graphical improvements and fixes
 
 <br />
