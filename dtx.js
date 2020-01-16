@@ -31,8 +31,15 @@ function fixInputEventHandlers() {
 
 // Adds toggle-able checkbox selection of work days to auto-fill with 7.5 hours
 function loadSelectMode(defaultMode) {
+	
+	// Add toggle select mode button to menubar
+	let selectModeCheckboxName = "toggleMode";
+	let selectModeCheckbox = document.createElement("input");
+    selectModeCheckbox.type = "checkbox";
+	selectModeCheckbox.id = selectModeCheckboxName;
+    selectModeCheckbox.checked = defaultMode;
+	
 	let inputs = [...document.querySelectorAll("#calDates_tabCalendar > tbody input")];
-
 	let checkboxes = inputs.map(input => {
 		// Disable inputs being dragged
 		input.parentElement.ondragstart = function() { return false };
@@ -66,25 +73,29 @@ function loadSelectMode(defaultMode) {
 		//  This makes it easier to select checkboxes, as you can click
 		//  the surrounding area or date label to toggle the checkbox
 		checkbox.parentNode.addEventListener("click", function(event) {
-			
 			// Check that select mode is enabled
-			if (checkbox.style.display !== "none") {
+			if (selectModeCheckbox.checked) {
 				if (event.target !== checkbox) checkbox.checked = !checkbox.checked; // Change checked state (if user didn't click checkbox)
 				checkboxChangedHandler(checkbox); // Fire handler
 			}
 		});
 		
+		// Register right-click handler to make single-tap right clicks uncheck
+		// checkboxes
+		checkbox.parentNode.addEventListener('contextmenu', function(event) {
+			event.preventDefault(); // Block right-click menu showing
+			
+			// Check that select mode is enabled
+			if (selectModeCheckbox.checked) {
+				checkbox.checked = false; // Untick checkbox
+				checkboxChangedHandler(checkbox); // Fire handler
+			}
+			
+			return false; // Block default right-click behaviour
+		}, false);
+		
 		return checkbox;
 	});
-	
-	
-	// Add toggle button button to menubar
-	let selectModeCheckboxName = "toggleMode";
-	
-	let selectModeCheckbox = document.createElement("input");
-    selectModeCheckbox.type = "checkbox";
-	selectModeCheckbox.id = selectModeCheckboxName;
-    selectModeCheckbox.checked = defaultMode;
 	
 	function changeSelectMode(enabled) {
 		// Show & hide checkboxes or text input fields
