@@ -1,5 +1,10 @@
-
+// Settings
 let setting_apiURL = "https://www.gov.uk/bank-holidays.json"; // URL to fetch up to date bank holidays
+
+
+// Global variables
+var checkboxChanged = false; // Flag to block context menu showing
+
 
 
 
@@ -93,6 +98,30 @@ function loadSelectMode(defaultMode) {
 			
 			return false; // Block default right-click behaviour
 		}, false);
+		
+		
+		// Credit to https://stackoverflow.com/questions/36754940/check-multiple-checkboxes-with-click-drag
+		// Credit to http://stackoverflow.com/questions/322378/javascript-check-if-mouse-button-down
+		function check(checkbox) {
+			if (lmbDown) {
+				//checkbox.checked = !box.checked; // toggle check state
+				checkbox.checked = 1;
+			} else if (rmbDown) {
+				checkbox.checked = 0;
+				checkboxChanged = true;
+			}
+			
+			// Run checkbox changed handler to effect input underneath
+			checkboxChangedHandler(checkbox);
+			
+			// Update checkboxes being selected flag
+			selectingCheckboxes = true;
+		}
+		
+		// Add hover handler to all checkboxes' parents (for easier selection) on page
+		checkbox.parentNode.addEventListener("mouseover", function(event) {
+			check(checkbox)
+		})
 		
 		return checkbox;
 	});
@@ -392,21 +421,6 @@ function setLeftButtonState(e) {
 	if (!lmbDown && !rmbDown) selectingCheckboxes = false;
 }
 
-// Credit to https://stackoverflow.com/questions/36754940/check-multiple-checkboxes-with-click-drag
-// Credit to http://stackoverflow.com/questions/322378/javascript-check-if-mouse-button-down
-var checkboxChanged = false; // Flag to block context menu showing
-function check(checkbox) {
-	if (lmbDown) {
-		//checkbox.checked = !box.checked; // toggle check state
-		checkbox.checked = 1;
-	} else if (rmbDown) {
-		checkbox.checked = 0;
-		checkboxChanged = true;
-	}
-	
-	// Update checkboxes being selected flag
-	selectingCheckboxes = true;
-}
 
 // Disable text selection while selecting checkboxes
 function disableSelect(event) {
@@ -433,17 +447,6 @@ function injectDraggingCheckboxSelection() {
 			return false;
 		}
 	}
-	
-	// Find all checkboxes
-	// var checkboxes = document.getElementsByClassName("polyfillerCheckbox");
-	var checkboxes = document.querySelectorAll('input[type=checkbox]');
-	
-	// Add hover handler to all checkboxes' parents (for easier selection) on page
-	checkboxes.forEach(checkbox =>
-		checkbox.parentNode.addEventListener("mouseover", function(event) {
-			check(checkbox)
-		})
-	);
 }
 
 
