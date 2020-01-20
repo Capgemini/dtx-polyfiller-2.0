@@ -11,6 +11,11 @@ Many thanks to the original [DTX Polyfiller extension](https://github.com/Capgem
   alt="Preview of settings"
   height="270"
 />
+<img
+  src="https://raw.githubusercontent.com/FreddieDev/dtx-polyfiller/master/previews/Cap%20UK%20front-page%20article.png"
+  alt="As seen on front-page of Cap UK"
+  height="270"
+/>
 
 ## Original features
 - Fix Chrome compatiblity for submitting claims 
