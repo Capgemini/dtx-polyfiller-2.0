@@ -1,24 +1,16 @@
 {
 	"name":"DTX Polyfiller 2",
 	"description":"Fix DTX for Chrome and add a plethora of useful features!",
-	"version":"2.7.0",
+	"version":"2.7.2",
 	"manifest_version":2,
 	"permissions":[
 		"storage",
-		"webRequest",
-		"webRequestBlocking",
 		"http://*.uki.capgemini.com/*",
 		"https://*.uki.capgemini.com/*",
 		"http://*.corp.capgemini.com/*",
 		"https://*.corp.capgemini.com/*",
 		"*://missbhasil01.corp.capgemini.com/*"
 	],
-	"background":{
-		"scripts":[
-			"silhouette/silhouette.js"
-		],
-		"persistent":true
-	},
 	"content_scripts":[
 		{
 			"matches":[
