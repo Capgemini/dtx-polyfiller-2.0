@@ -1,24 +1,22 @@
 {
 	"name":"DTX Polyfiller 2",
 	"description":"Fix DTX for Chrome and add a plethora of useful features!",
-	"version":"2.7.2",
+	"version":"2.8.0",
 	"manifest_version":2,
 	"permissions":[
 		"storage",
-		"http://*.uki.capgemini.com/*",
-		"https://*.uki.capgemini.com/*",
-		"http://*.corp.capgemini.com/*",
-		"https://*.corp.capgemini.com/*",
-		"*://missbhasil01.corp.capgemini.com/*"
+		"http://*.uki.capgemini.com/DTX.NET/*",
+		"https://*.uki.capgemini.com/DTX.NET/*",
+		"http://*.corp.capgemini.com/DTX.NET/*",
+		"https://*.corp.capgemini.com/DTX.NET/*"
 	],
 	"content_scripts":[
 		{
 			"matches":[
-				"http://*.uki.capgemini.com/*",
-				"https://*.uki.capgemini.com/*",
-				"http://*.corp.capgemini.com/*",
-				"https://*.corp.capgemini.com/*",
-				"*://missbhasil01.corp.capgemini.com/*"
+				"http://*.uki.capgemini.com/DTX.NET/*",
+				"https://*.uki.capgemini.com/DTX.NET/*",
+				"http://*.corp.capgemini.com/DTX.NET/*",
+				"https://*.corp.capgemini.com/DTX.NET/*"
 			],
 			"css":[
 				"dtx.css"
@@ -29,10 +27,10 @@
 		},
 		{
 			"matches":[
-				"http://*.uki.capgemini.com/*/SubmitClaims.aspx",
-				"https://*.uki.capgemini.com/*/SubmitClaims.aspx",
-				"http://*.corp.capgemini.com/*/SubmitClaims.aspx",
-				"https://*.corp.capgemini.com/*/SubmitClaims.aspx"
+				"http://*.uki.capgemini.com/DTX.NET/SubmitClaims.aspx",
+				"https://*.uki.capgemini.com/DTX.NET/SubmitClaims.aspx",
+				"http://*.corp.capgemini.com/DTX.NET/SubmitClaims.aspx",
+				"https://*.corp.capgemini.com/DTX.NET/SubmitClaims.aspx"
 			],
 			"js":[
 				"submit-claims/submit-claims-injector.js"
