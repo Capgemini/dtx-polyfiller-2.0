@@ -1,3 +1,4 @@
+/* Fix pages having a scrollbar */
 #dgHolidaySubmitClaims_main, #dgHolidaySubmitClaims_main td, #dgHolidaySubmitClaims_div {
   height: auto !important;
 }

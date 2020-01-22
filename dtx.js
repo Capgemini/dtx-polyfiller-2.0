@@ -8,6 +8,16 @@ var checkboxChanged = false; // Flag to block context menu showing
 
 
 
+// Injects a content script into the page with access to page functions
+function injectScript(scriptStr) {	
+	var script = document.createElement('script');
+	script.textContent = scriptStr;
+	document.head.appendChild(script);
+	script.remove();
+}
+
+
+
 // Forcefully shows invisible buttons
 function fixMissingButtons() {
 	document.querySelectorAll('input[type="button"]')
@@ -36,6 +46,12 @@ function fixInputEventHandlers() {
 
 // Adds toggle-able checkbox selection of work days to auto-fill with 7.5 hours
 function loadSelectMode(defaultMode) {
+	
+	injectScript(`
+		document.addEventListener('callCalculateTotalsFunc', function() {
+			if (typeof CalculateTotals == "function") CalculateTotals("cell");
+		});
+	`);
 	
 	// Add toggle select mode button to menubar
 	let selectModeCheckboxName = "toggleMode";
@@ -72,6 +88,10 @@ function loadSelectMode(defaultMode) {
 		function checkboxChangedHandler(checkbox) {
 			input.value = checkbox.checked ? "7.5" : "";
 			checkbox.classList.remove("semiChecked");
+			
+			// Call site function to update "Quantity" (total hrs) field
+			var evt = new Event("callCalculateTotalsFunc", {"bubbles":true, "cancelable":false});
+			document.dispatchEvent(evt); // Fire the event
 		}
 		
 		// Register click hanlder for checkbox container (parent & children)
@@ -169,31 +189,22 @@ function loadSelectMode(defaultMode) {
 }
 
 
-// Injects a content script listener into the page with access to page functions
-function injectSaveListener() {	
-	var script = document.createElement('script');
-	script.textContent = `
-		document.addEventListener('callSaveFuncs', function() {
-			if (typeof saveFromIcon === "function") saveFromIcon(); else if (typeof myPage.Save === "function") myPage.Save(); // Call DTX save button click function
-		});
-	`;
-	document.head.appendChild(script);
-	script.remove();
-}
-
 // Adds hotkeys:
 //  CTRL+S to save changes
 //  Escape to go home
 function injectShortcutKeys() {
-	injectSaveListener();
+	injectScript(`
+		document.addEventListener('callSaveFuncs', function() {
+			if (typeof saveFromIcon === "function") saveFromIcon(); else if (typeof myPage.Save === "function") myPage.Save(); // Call DTX save button click function
+		});
+	`);
 	
 	document.addEventListener('keydown', function(event) {
 		const keySPressed = (event.keyCode === 83 || event.keyCode === 115); // Check if code is for 's' or 'S'
 		if (event.ctrlKey && keySPressed) {
 			event.preventDefault(); // Prevent browser's save dialog showing
 			
-			var evt = document.createEvent('Event');
-			evt.initEvent('callSaveFuncs', true, false);
+			var evt = new Event("callSaveFuncs", {"bubbles":true, "cancelable":false});
 			document.dispatchEvent(evt); // Fire the event
 			
 		} else if (event.key === "Escape") {
