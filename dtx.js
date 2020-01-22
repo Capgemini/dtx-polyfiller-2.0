@@ -470,19 +470,38 @@ chrome.storage.sync.get({
 	showBankHolidays: true,
 	holidayRegion: 'england-and-wales',
 	autoLogin: false,
+	loggedOut: false,
 	employeeNumber: "",
 	autoFillFields: true,
 	autoFillTaskNumber: "1",
 	autoFillProjectCode: "",
 }, function(items) {
 
-    if (items.autoLogin) autoLogin(items.employeeNumber); // Run auto-login
+    if (items.autoLogin) {
+		
+		var logoutButton = document.querySelector("a[title='Logout']");
+		if (logoutButton) {
+			logoutButton.addEventListener("click", function() {
+				chrome.storage.sync.set({ loggedOut: true }, function() {
+					window.location.href = logoutButton.href; // Logout user
+				});
+				return false; // Block logout until loggedOut chrome.storage saves
+			});
+		}
+
+		if (!items.loggedOut) autoLogin(items.employeeNumber); // Run auto-login
+	}
 	
 	fixMissingButtons();
 	fixInputEventHandlers();
 	
 	// Only inject if the page has a menubar of buttons
-	if (pageContainsMenuBar()) injectStandardUKTimeButton();
+	if (pageContainsMenuBar()) {
+		injectStandardUKTimeButton();
+		
+		// Reset loggedOut field to false (menubar is only found on logged-in pages)
+		if (items.loggedOut) chrome.storage.sync.set({ loggedOut: false });
+	}
 
 	if (items.shortcutKeys) injectShortcutKeys();
 
