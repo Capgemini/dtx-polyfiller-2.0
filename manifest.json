@@ -5,18 +5,14 @@
 	"manifest_version":2,
 	"permissions":[
 		"storage",
-		"http://*.uki.capgemini.com/DTX.NET/*",
-		"https://*.uki.capgemini.com/DTX.NET/*",
-		"http://*.corp.capgemini.com/DTX.NET/*",
-		"https://*.corp.capgemini.com/DTX.NET/*"
+		"http://*.capgemini.com/DTX.NET/*",
+		"https://*.capgemini.com/DTX.NET/*"
 	],
 	"content_scripts":[
 		{
 			"matches":[
-				"http://*.uki.capgemini.com/DTX.NET/*",
-				"https://*.uki.capgemini.com/DTX.NET/*",
-				"http://*.corp.capgemini.com/DTX.NET/*",
-				"https://*.corp.capgemini.com/DTX.NET/*"
+				"http://*.capgemini.com/DTX.NET/*",
+				"https://*.capgemini.com/DTX.NET/*"
 			],
 			"css":[
 				"dtx.css"
@@ -27,10 +23,8 @@
 		},
 		{
 			"matches":[
-				"http://*.uki.capgemini.com/DTX.NET/SubmitClaims.aspx",
-				"https://*.uki.capgemini.com/DTX.NET/SubmitClaims.aspx",
-				"http://*.corp.capgemini.com/DTX.NET/SubmitClaims.aspx",
-				"https://*.corp.capgemini.com/DTX.NET/SubmitClaims.aspx"
+				"http://*.capgemini.com/DTX.NET/SubmitClaims.aspx",
+				"https://*.capgemini.com/DTX.NET/SubmitClaims.aspx"
 			],
 			"js":[
 				"submit-claims/submit-claims-injector.js"
