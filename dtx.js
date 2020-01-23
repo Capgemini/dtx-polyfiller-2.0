@@ -523,10 +523,11 @@ chrome.storage.sync.get({
 			// Get bank holidays table based off user's settings
 			let myBankHolidays = holidaysJSON[items.holidayRegion];
 			try {
-				if (!myBankHolidays) {throw "Invalid region!"}
+				if (!items.holidayRegion) throw "Your bank holiday region is unset!";
+				if (!myBankHolidays) throw "Bank holidays JSON from gov.uk didn't contain your region!";
 				myBankHolidays = holidaysJSON[items.holidayRegion].events;
 			} catch(e) {
-				console.warn("ERROR:\n" + e.message);
+				console.warn("ERROR SHOWING BANK HOLIDAYS:\n" + e);
 				return;
 			}
 			
@@ -539,5 +540,5 @@ chrome.storage.sync.get({
 		});
 	}
 	
-	console.log("DTX Polyfiller v" + chrome.runtime.getManifest().version + " loaded!");
+	console.log("[DTX Polyfiller v" + chrome.runtime.getManifest().version + "]: Loaded!");
 });
