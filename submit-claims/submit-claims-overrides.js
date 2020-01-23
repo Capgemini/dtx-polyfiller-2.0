@@ -255,7 +255,7 @@ setupAuthorisers = function (data) {
             selectedAuthoriser = $(authoriserCol).find("select option[selected]");
 
             selectedAuthoriserValue = $(selectedAuthoriser).attr('value');
-            $(authoriserCol).find("nobr").html("");
+            $(authoriserCol).find("nobr").empty();
             authorisers = new Array();
             selectAuthoriser = "";
 
