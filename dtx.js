@@ -539,5 +539,5 @@ chrome.storage.sync.get({
 		});
 	}
 	
-	console.log("DTX Polyfiller loaded!");
+	console.log("DTX Polyfiller v" + chrome.runtime.getManifest().version + " loaded!");
 });
