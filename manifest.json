@@ -24,7 +24,8 @@
 				"dtx.css"
 			],
 			"js":[
-				"dtx.js"
+				"dtx.js",
+				"sharedFunctions.js"
 			]
 		},
 		{
