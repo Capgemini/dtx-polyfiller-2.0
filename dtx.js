@@ -491,10 +491,7 @@ chrome.storage.sync.get({
 		var logoutButton = document.querySelector("a[title='Logout']");
 		if (logoutButton) {
 			logoutButton.addEventListener("click", function() {
-				chrome.storage.sync.set({ loggedOut: true }, function() {
-					window.location.href = logoutButton.href; // Logout user
-				});
-				return false; // Block logout until loggedOut chrome.storage saves
+				chrome.storage.sync.set({ loggedOut: true });
 			});
 		}
 
