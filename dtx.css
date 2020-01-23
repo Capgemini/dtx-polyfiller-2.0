@@ -150,3 +150,19 @@ input[type=checkbox].semiChecked:after {
 	width: 20px;
 	height: 20px;
 }
+
+/* Styling to correct warning that DTX only supports IE */
+.polyfilerCorrectWarning {
+	text-decoration: line-through !important;
+}
+.polyfilerCorrectWarning:after {
+	content: "DTX Polyfiler 2.0 loaded \A Chrome is now supported, enjoy!";
+	white-space: pre; /* Add \A newline support */
+	
+	display: inline-block;
+	height: auto;
+	width: 100%;
+	
+	font-size: 22px;
+	color: #1a7;
+}
