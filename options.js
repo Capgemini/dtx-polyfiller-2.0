@@ -139,6 +139,13 @@ function fill_region_options() {
 document.addEventListener('DOMContentLoaded', fill_region_options);
 document.getElementById('save').addEventListener('click', save_options);
 
+// Add support for maxLength field to number inputs
+document.querySelectorAll('input[type="number"]').forEach(function(input) {
+	input.addEventListener('input', function(event) {
+		this.value = this.value.slice(0, this.maxLength);
+	});
+});
+
 document.getElementById("showBankHolidays").addEventListener("change", function(event) {
 	toggleBankHolidayContainer(event.target.checked);
 });

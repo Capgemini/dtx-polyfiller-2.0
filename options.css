@@ -24,6 +24,11 @@ label.header {
 	font-weight: bold;
 }
 
+#selectHours {
+	margin-top: 5px;
+	margin-left: 25px;
+}
+
 #status {
 	display: inline-block;
 	margin-left: 5px;

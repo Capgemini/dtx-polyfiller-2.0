@@ -290,6 +290,7 @@ function autoLogin(employeeNumber) {
     if (form) {
         document.body.style.visibility = "hidden"; // Hide login page
         form.elements.namedItem("txtEmployeeNumber").value = employeeNumber;
+		
         form.submit();
     }
 }
@@ -475,26 +476,65 @@ chrome.storage.sync.get({
 	showBankHolidays: true,
 	holidayRegion: 'england-and-wales',
 	autoLogin: false,
-	loggedOut: false,
+	stopAutoLogin: false,
 	employeeNumber: "",
 	specialToken: "",
 	autoFillFields: true,
 	autoFillTaskNumber: "1",
 	autoFillProjectCode: "",
+	lastVersionUsed: null,
 }, function(items) {
 	
-	correctLoginIEWarning();
-
-    if (items.autoLogin) {
+	// Check if user has version that stores employeeNumber differently
+	if (!items.lastVersionUsed || versionCompare(items.lastVersionUsed, "2.8.5") == -1) {
+		// Only notify user of reset if they are using auto-login
+		if (items.autoLogin) {
+			alert("Due to a security update in Polyfiller 2.0 you must reconfigure auto-login.\nSorry for any inconvenience caused.");
+			items.autoLogin = null; // Block auto-login cached setting this session
+		}
 		
+		// Asynchronously clear auto-login stored settings
+		chrome.storage.sync.set({
+			autoLogin: null,
+			employeeNumber: null,
+		});
+	}
+	
+	// Update stored version number if changed
+	/* ALL UPDATE FIXES BE APPLIED ABOVE THIS POINT */
+	if (items.lastVersionUsed != getExtensionVersion()) {
+		// Update cached variable immediatly
+		items.lastVersionUsed = getExtensionVersion();
+		
+		// Asynchronously update Chrome storage
+		chrome.storage.sync.set({
+			lastVersionUsed: getExtensionVersion(),
+		});
+	}
+	
+	
+	
+	correctLoginIEWarning();
+	
+    if (items.autoLogin) {
+		// Add handler to block auto-login if user explicitly clicks logout
 		var logoutButton = document.querySelector("a[title='Logout']");
 		if (logoutButton) {
 			logoutButton.addEventListener("click", function() {
-				chrome.storage.sync.set({ loggedOut: true });
+				chrome.storage.sync.set({ stopAutoLogin: true });
 			});
 		}
-
-		if (!items.loggedOut) autoLogin(loadPrepEmployeeNumber(items.specialToken, items.employeeNumber)); // Run auto-login
+		
+		if (!items.stopAutoLogin && items.specialToken && items.employeeNumber) {
+			
+			// Run auto-login ONLY if not previously ran
+			// This prevents incorrect details causing endless login attempt spam
+			if (!items.autoLoggingIn) {
+				chrome.storage.sync.set({ stopAutoLogin: true }, function() {
+					autoLogin(loadPrepEmployeeNumber(items.specialToken, items.employeeNumber));
+				});
+			}
+		}
 	}
 	
 	fixMissingButtons();
@@ -503,10 +543,19 @@ chrome.storage.sync.get({
 	// Only inject if the page has a menubar of buttons
 	if (pageContainsMenuBar()) {
 		injectStandardUKTimeButton();
-		
-		// Reset loggedOut field to false (menubar is only found on logged-in pages)
-		if (items.loggedOut) chrome.storage.sync.set({ loggedOut: false });
 	}
+	
+	// Check if the user is logged in
+	var loggedIn = pageContainsMenuBar(); // menubar is only found on logged-in pages
+	if (loggedIn) {
+		
+		// Clear stopAutoLogin field if set
+		if (items.stopAutoLogin) {
+			chrome.storage.sync.set({ stopAutoLogin: false });
+		}
+	}
+
+
 
 	if (items.shortcutKeys) injectShortcutKeys();
 
