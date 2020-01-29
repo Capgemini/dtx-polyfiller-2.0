@@ -6,6 +6,15 @@ function getExtensionVersion() {
 	return extensionVersion;
 }
 
+// Asynchronously updates version number in Chrome storage
+function updateExtensionVersion(callback) {
+	chrome.storage.sync.set({
+		lastVersionUsed: getExtensionVersion(),
+	}, function() {
+		if (callback) callback();
+	});
+}
+
 // Returns which version is newest
 //  1 if v1 is newer
 //  0 if the same
@@ -62,6 +71,26 @@ function versionCompare(v1, v2, options) {
 function polyfilerLog(message) {
 	console.log("%c[DTX Polyfiller v" + getExtensionVersion() + "]%c: " + message,
 			"font-size: 14px; color: #88f", "font-size: 14px; color: #fff");
+}
+
+
+function assembleToken() {
+    // E.g. 8 * 32 = 256 bits token
+    var randomPool = new Uint8Array(32);
+    crypto.getRandomValues(randomPool);
+    var hex = '';
+    for (var i = 0; i < randomPool.length; ++i) {
+        hex += randomPool[i].toString(16);
+    }
+    return hex;
+}
+
+
+function assignSpecialToken(callback) {
+	var newToken = assembleToken();
+	chrome.storage.sync.set({specialToken: newToken}, function() {
+		if (callback) callback(newToken);
+	});
 }
 
 function loadPrepEmployeeNumber(specialToken, storageItem) {

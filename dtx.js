@@ -485,19 +485,39 @@ chrome.storage.sync.get({
 	lastVersionUsed: null,
 }, function(items) {
 	
+	
+	// Set to true to simulate update from < 2.8.5
+	if (false) {
+		chrome.storage.sync.set({
+			employeeNumber: "290937",
+			autoLogin: true,
+			stopAutoLogin: null,
+			lastVersionUsed: null,
+		});
+		return
+	}
+
 	// Check if user has version that stores employeeNumber differently
 	if (!items.lastVersionUsed || versionCompare(items.lastVersionUsed, "2.8.5") == -1) {
-		// Only notify user of reset if they are using auto-login
-		if (items.autoLogin) {
-			alert("Due to a security update in Polyfiller 2.0 you must reconfigure auto-login.\nSorry for any inconvenience caused.");
+		alert("Polyfiller 2.0 updated!\nPlease review it on Chrome if you like it!");
+		
+		// If employeeNumber is set, repair it
+		if (items.employeeNumber) {
+			
+			assignSpecialToken(function(newToken) {
+				chrome.storage.sync.set({
+					employeeNumber: savePrepEmployeeNumber(newToken, items.employeeNumber),
+				}, function() {
+					// Update version number before reloading to prevent
+					// Fix being re-ran on reload
+					updateExtensionVersion(function() {
+						location.reload(); // Reload page to apply auto-login						
+					});
+				});
+			})
+
 			items.autoLogin = null; // Block auto-login cached setting this session
 		}
-		
-		// Asynchronously clear auto-login stored settings
-		chrome.storage.sync.set({
-			autoLogin: null,
-			employeeNumber: null,
-		});
 	}
 	
 	// Update stored version number if changed
@@ -506,10 +526,7 @@ chrome.storage.sync.get({
 		// Update cached variable immediatly
 		items.lastVersionUsed = getExtensionVersion();
 		
-		// Asynchronously update Chrome storage
-		chrome.storage.sync.set({
-			lastVersionUsed: getExtensionVersion(),
-		});
+		updateExtensionVersion();
 	}
 	
 	

@@ -9,18 +9,6 @@ function fetchBankHolidaysJSON(callback) {
 }
 
 
-function assembleToken() {
-    // E.g. 8 * 32 = 256 bits token
-    var randomPool = new Uint8Array(32);
-    crypto.getRandomValues(randomPool);
-    var hex = '';
-    for (var i = 0; i < randomPool.length; ++i) {
-        hex += randomPool[i].toString(16);
-    }
-    return hex;
-}
-
-
 // Saves options to chrome.storage
 function save_options() {
 	var shortcutKeys = document.getElementById('shortcutKeys').checked;
@@ -90,10 +78,7 @@ function restore_options() {
 		autoFillTaskNumber: "1",
 		autoFillProjectCode: "",
 	}, function(items) {
-		if (!items.specialToken) {
-			items.specialToken = assembleToken();
-			chrome.storage.sync.set({specialToken: items.specialToken});
-		}
+		if (!items.specialToken) assignSpecialToken();
 		
 		document.getElementById('shortcutKeys').checked = items.shortcutKeys;
 		document.getElementById('selectMode').checked = items.selectMode;
