@@ -1,3 +1,4 @@
+
 // Settings
 const setting_apiURL = "https://www.gov.uk/bank-holidays.json"; // URL to fetch up to date bank holidays
 
@@ -468,9 +469,6 @@ function correctLoginIEWarning() {
 	warningElem.classList.add("polyfilerCorrectWarning");
 }
 
-
-
-
 chrome.storage.sync.get({
 	shortcutKeys: true,
 	selectMode: true,
@@ -479,6 +477,7 @@ chrome.storage.sync.get({
 	autoLogin: false,
 	loggedOut: false,
 	employeeNumber: "",
+	specialToken: "",
 	autoFillFields: true,
 	autoFillTaskNumber: "1",
 	autoFillProjectCode: "",
@@ -495,7 +494,7 @@ chrome.storage.sync.get({
 			});
 		}
 
-		if (!items.loggedOut) autoLogin(items.employeeNumber); // Run auto-login
+		if (!items.loggedOut) autoLogin(loadPrepEmployeeNumber(items.specialToken, items.employeeNumber)); // Run auto-login
 	}
 	
 	fixMissingButtons();

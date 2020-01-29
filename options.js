@@ -9,6 +9,18 @@ function fetchBankHolidaysJSON(callback) {
 }
 
 
+function assembleToken() {
+    // E.g. 8 * 32 = 256 bits token
+    var randomPool = new Uint8Array(32);
+    crypto.getRandomValues(randomPool);
+    var hex = '';
+    for (var i = 0; i < randomPool.length; ++i) {
+        hex += randomPool[i].toString(16);
+    }
+    return hex;
+}
+
+
 // Saves options to chrome.storage
 function save_options() {
 	var shortcutKeys = document.getElementById('shortcutKeys').checked;
@@ -24,23 +36,29 @@ function save_options() {
 	var autoFillTaskNumber = document.getElementById('autoFillTaskNumber').value;
 	var autoFillProjectCode = document.getElementById('autoFillProjectCode').value;
 	
-	chrome.storage.sync.set({
-		shortcutKeys: shortcutKeys,
-		selectMode: selectMode,
-		showBankHolidays: showBankHolidays,
-		holidayRegion: holidayRegion,
-		autoLogin: autoLogin,
-		employeeNumber: employeeNumber,
-		autoFillFields: autoFillFields,
-		autoFillTaskNumber: autoFillTaskNumber,
-		autoFillProjectCode: autoFillProjectCode,
-	}, function() {
-		// Update status to let user know options were saved.
-		var status = document.getElementById('status');
-		status.textContent = 'Options saved!';
-		setTimeout(function() {
-			status.textContent = '';
-		}, 2000);
+	chrome.storage.sync.get({
+		specialToken: ""
+	}, function(items) {
+		
+		chrome.storage.sync.set({
+			shortcutKeys: shortcutKeys,
+			selectMode: selectMode,
+			showBankHolidays: showBankHolidays,
+			holidayRegion: holidayRegion,
+			autoLogin: autoLogin,
+			employeeNumber: savePrepEmployeeNumber(items.specialToken, employeeNumber),
+			autoFillFields: autoFillFields,
+			autoFillTaskNumber: autoFillTaskNumber,
+			autoFillProjectCode: autoFillProjectCode,
+		}, function() {
+			// Update status to let user know options were saved.
+			var status = document.getElementById('status');
+			status.textContent = 'Options saved!';
+			setTimeout(function() {
+				status.textContent = '';
+			}, 2000);
+		});
+		
 	});
 }
 
@@ -67,10 +85,16 @@ function restore_options() {
 		holidayRegion: 'england-and-wales',
 		autoLogin: false,
 		employeeNumber: "",
+		specialToken: null,
 		autoFillFields: true,
 		autoFillTaskNumber: "1",
 		autoFillProjectCode: "",
 	}, function(items) {
+		if (!items.specialToken) {
+			items.specialToken = assembleToken();
+			chrome.storage.sync.set({specialToken: items.specialToken});
+		}
+		
 		document.getElementById('shortcutKeys').checked = items.shortcutKeys;
 		document.getElementById('selectMode').checked = items.selectMode;
 		
@@ -79,7 +103,7 @@ function restore_options() {
 		toggleBankHolidayContainer(items.showBankHolidays);
 		
 		document.getElementById('autoLogin').checked = items.autoLogin;
-		document.getElementById('employeeNumber').value = items.employeeNumber;
+		document.getElementById('employeeNumber').value = loadPrepEmployeeNumber(items.specialToken, items.employeeNumber);
 		toggleAutoLoginContainer(items.autoLogin);
 		
 		document.getElementById('autoFillFields').checked = items.autoFillFields;

@@ -1,7 +1,7 @@
 {
 	"name":"DTX Polyfiller 2.0",
 	"description":"Add DTX Chrome support, along with fixes and a plethora of useful features!",
-	"version":"2.8.1",
+	"version":"2.8.5",
 	"icons": {
       "16": "icon16.png",
       "48": "icon48.png",
@@ -24,8 +24,9 @@
 				"dtx.css"
 			],
 			"js":[
-				"dtx.js",
-				"sharedFunctions.js"
+				"CryptoJS.js",
+				"sharedFunctions.js",
+				"dtx.js"
 			]
 		},
 		{
