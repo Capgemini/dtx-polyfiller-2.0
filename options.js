@@ -1,13 +1,3 @@
-const setting_apiURL = "https://www.gov.uk/bank-holidays.json"; // URL to fetch up to date bank holidays
-
-// Pulls bank holidays from UK gov site and sends them to handler
-function fetchBankHolidaysJSON(callback) {
-    const endpoint = setting_apiURL;
-    fetch(endpoint)
-        .then((response) => response.json())
-        .then((data) => callback(data));
-}
-
 
 // Saves options to chrome.storage
 function save_options() {

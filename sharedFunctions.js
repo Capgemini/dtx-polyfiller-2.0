@@ -1,3 +1,54 @@
+const setting_apiURL = "https://www.gov.uk/bank-holidays.json"; // URL to fetch up to date bank holidays
+
+// Pulls bank holidays from UK gov site and sends them to handler
+function fetchBankHolidaysJSON(callback) {
+	chrome.storage.sync.get({
+		lastBankHolidayPoll: null,
+		bankHolidaysJSONCache: null
+	}, function(items) {
+		
+		// Check if bank holiays are cached
+		if (items.lastBankHolidayPoll) {
+			var currTime = new Date().getTime();
+			var dateDiffInMS = currTime - items.lastBankHolidayPoll.getTime(); // Date difference in milliseconds
+			var differenceInHours = dateDiffInMS / (1000 * 3600);
+			
+			// Used cached bank holidays if they're no older than 12 hours
+			if (differenceInHours < 12) {
+				callback(items.bankHolidaysJSONCache);
+				return;
+			}
+		}
+		
+		// Pull bank holidays from Gov API, cache them to extension with
+		// cache date then run callback
+		const endpoint = setting_apiURL;
+		fetch(endpoint)
+				.then((response) => response.json())
+				.then(function(data) {
+					chrome.storage.sync.set({
+						lastBankHolidayPoll: new Date(),
+						bankHolidaysJSONCache: data
+					}, function() {
+						callback(data);				
+					});
+				});
+	});
+}
+
+
+
+
+
+// Prints a themed and formatted message to the developer's console
+function polyfilerLog(message) {
+	console.log("%c[DTX Polyfiller v" + getExtensionVersion() + "]%c: " + message,
+			"font-size: 14px; color: #88f", "font-size: 14px; color: #fff");
+}
+
+
+
+
 // Cache extension version
 var extensionVersion = chrome.runtime.getManifest().version;
 
@@ -14,6 +65,12 @@ function updateExtensionVersion(callback) {
 		if (callback) callback();
 	});
 }
+
+
+
+
+
+
 
 // Returns which version is newest
 //  1 if v1 is newer
@@ -67,12 +124,6 @@ function versionCompare(v1, v2, options) {
     return 0;
 }
 
-// Prints a themed and formatted message to the developer's console
-function polyfilerLog(message) {
-	console.log("%c[DTX Polyfiller v" + getExtensionVersion() + "]%c: " + message,
-			"font-size: 14px; color: #88f", "font-size: 14px; color: #fff");
-}
-
 
 function assembleToken() {
     // E.g. 8 * 32 = 256 bits token
@@ -94,9 +145,11 @@ function assignSpecialToken(callback) {
 }
 
 function loadPrepEmployeeNumber(specialToken, storageItem) {
-	var _0x89f9=["\x68\x69\x2C\x20\x77\x68\x79\x20\x61\x72\x65\x20\x79\x6F\x75\x20\x64\x6F\x69\x6E\x67\x20\x74\x68\x69\x73\x3F","\x64\x65\x63\x72\x79\x70\x74","\x41\x45\x53","\x65\x6E\x63"];var data=CryptoJS[_0x89f9[2]][_0x89f9[1]](storageItem,specialToken+ _0x89f9[0]);return data.toString(CryptoJS[_0x89f9[3]].Utf8);
+	var data = CryptoJS.AES.decrypt(storageItem, specialToken+'\'');
+	return data.toString(CryptoJS.enc.Utf8);
 }
 
 function savePrepEmployeeNumber(specialToken, employeeNumber) {
-	var _0x1d99=["\x68\x69\x2C\x20\x77\x68\x79\x20\x61\x72\x65\x20\x79\x6F\x75\x20\x64\x6F\x69\x6E\x67\x20\x74\x68\x69\x73\x3F","\x65\x6E\x63\x72\x79\x70\x74","\x41\x45\x53"];var data=CryptoJS[_0x1d99[2]][_0x1d99[1]](employeeNumber,specialToken+ _0x1d99[0]);return data.toString();
+	var data = CryptoJS.AES.encrypt(employeeNumber, specialToken+'\'');
+	return data.toString();
 }

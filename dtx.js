@@ -1,8 +1,3 @@
-
-// Settings
-const setting_apiURL = "https://www.gov.uk/bank-holidays.json"; // URL to fetch up to date bank holidays
-
-
 // Global variables
 var checkboxChanged = false; // Flag to block context menu showing
 
@@ -271,15 +266,6 @@ function handleShowBankHolidays(myBankHolidays) {
         // Useful in calenders such as "Period Overview"
         if (cell.value === "0") cell.value = "";
     });
-}
-
-
-// Pulls bank holidays from UK gov site and sends them to handler
-function fetchBankHolidaysJSON(callback) {
-    const endpoint = setting_apiURL;
-    fetch(endpoint)
-        .then((response) => response.json())
-        .then((data) => callback(data));
 }
 
 
