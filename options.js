@@ -3,6 +3,7 @@
 function save_options() {
 	var shortcutKeys = document.getElementById('shortcutKeys').checked;
 	var selectMode = document.getElementById('selectMode').checked;
+	var selectHours = document.getElementById('selectHours').value;
 	
 	var showBankHolidays = document.getElementById('showBankHolidays').checked;
 	var holidayRegion = document.getElementById('holidayRegion').value;
@@ -21,6 +22,7 @@ function save_options() {
 		chrome.storage.sync.set({
 			shortcutKeys: shortcutKeys,
 			selectMode: selectMode,
+			selectHours: selectHours,
 			showBankHolidays: showBankHolidays,
 			holidayRegion: holidayRegion,
 			autoLogin: autoLogin,
@@ -59,6 +61,7 @@ function restore_options() {
 	chrome.storage.sync.get({
 		shortcutKeys: true,
 		selectMode: true,
+		selectHours: "",
 		showBankHolidays: true,
 		holidayRegion: 'england-and-wales',
 		autoLogin: false,
@@ -72,6 +75,7 @@ function restore_options() {
 		
 		document.getElementById('shortcutKeys').checked = items.shortcutKeys;
 		document.getElementById('selectMode').checked = items.selectMode;
+		document.getElementById('selectHours').value = items.selectHours;
 		
 		document.getElementById('showBankHolidays').checked = items.showBankHolidays;
 		document.getElementById('holidayRegion').value = items.holidayRegion;
