@@ -292,7 +292,7 @@ function autoLogin(employeeNumber) {
 
 // Injects a button into calender views to quick-select multiple days
 const fillModes = Object.freeze({"businessdays":0, "all":1, "none":2});
-function injectAutoFillButton() {
+function injectAutoFillButton(selectHours) {
 	
 	// Create fill button
 	let autoFillButton = document.createElement("button");
@@ -326,8 +326,9 @@ function injectAutoFillButton() {
 			// Auto-complete inputs
 			if (input.type == "checkbox") {
 				input.checked = shouldSelect;
+				input.classList.remove("semiChecked");
 			} else {
-				input.value = shouldSelect ? "7.5" : "";
+				input.value = shouldSelect ? selectHours : "";
 			}
 		});
 		
@@ -576,7 +577,7 @@ chrome.storage.sync.get({
 	if (!!document.getElementById("calDates_tabCalendar")) {
 		if (pageContainsMenuBar()) {
 			injectCustomButtonsContainer();
-			injectAutoFillButton();
+			injectAutoFillButton(items.selectHours);
 		}
 		
 		if (items.autoFillFields) {
