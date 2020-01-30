@@ -2,38 +2,10 @@ const setting_apiURL = "https://www.gov.uk/bank-holidays.json"; // URL to fetch 
 
 // Pulls bank holidays from UK gov site and sends them to handler
 function fetchBankHolidaysJSON(callback) {
-	chrome.storage.sync.get({
-		lastBankHolidayPoll: null,
-		bankHolidaysJSONCache: null
-	}, function(items) {
-		
-		// Check if bank holiays are cached
-		if (items.lastBankHolidayPoll) {
-			var currTime = new Date().getTime();
-			var dateDiffInMS = currTime - items.lastBankHolidayPoll.getTime(); // Date difference in milliseconds
-			var differenceInHours = dateDiffInMS / (1000 * 3600);
-			
-			// Used cached bank holidays if they're no older than 12 hours
-			if (differenceInHours < 12) {
-				callback(items.bankHolidaysJSONCache);
-				return;
-			}
-		}
-		
-		// Pull bank holidays from Gov API, cache them to extension with
-		// cache date then run callback
-		const endpoint = setting_apiURL;
-		fetch(endpoint)
-				.then((response) => response.json())
-				.then(function(data) {
-					chrome.storage.sync.set({
-						lastBankHolidayPoll: new Date(),
-						bankHolidaysJSONCache: data
-					}, function() {
-						callback(data);				
-					});
-				});
-	});
+    const endpoint = setting_apiURL;
+    fetch(endpoint)
+        .then((response) => response.json())
+        .then((data) => callback(data));
 }
 
 
