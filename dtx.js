@@ -39,9 +39,21 @@ function fixInputEventHandlers() {
 	});
 }
 
+// Sets a checkbox's checked state based off the input it's representing
+function updateCheckedDisplay(input, checkbox, selectHours) {
+	let selectedHrs = Number(input.value);
+	checkbox.checked = selectedHrs === Number(selectHours);
 
-// Adds toggle-able checkbox selection of work days to auto-fill with 7.5 hours
-function loadSelectMode(defaultMode) {
+	// Highlight checkboxes that have work hours but not a full day
+	if (Number(selectedHrs) !== Number(selectHours) && selectedHrs !== 0) {
+		checkbox.classList.add("semiChecked");
+	} else {
+		checkbox.classList.remove("semiChecked");
+	}
+}
+
+// Adds toggle-able checkbox selection of work days to auto-fill with 7.5 (default) hours
+function loadSelectMode(defaultMode, selectHours) {
 	
 	injectScript(`
 		document.addEventListener('callCalculateTotalsFunc', function() {
@@ -82,8 +94,8 @@ function loadSelectMode(defaultMode) {
 		
 		// Handler for when checkbox is changed
 		function checkboxChangedHandler(checkbox) {
-			input.value = checkbox.checked ? "7.5" : "";
-			checkbox.classList.remove("semiChecked");
+			input.value = checkbox.checked ? selectHours : "";
+			updateCheckedDisplay(input, checkbox, selectHours);
 			
 			// Call site function to update "Quantity" (total hrs) field
 			var evt = new Event("callCalculateTotalsFunc", {"bubbles":true, "cancelable":false});
@@ -119,6 +131,8 @@ function loadSelectMode(defaultMode) {
 		// Credit to https://stackoverflow.com/questions/36754940/check-multiple-checkboxes-with-click-drag
 		// Credit to http://stackoverflow.com/questions/322378/javascript-check-if-mouse-button-down
 		function check(checkbox) {
+			if (!selectModeCheckbox.checked) return; // Don't run when checkboxes are disabled
+			
 			if (lmbDown) {
 				//checkbox.checked = !box.checked; // toggle check state
 				checkbox.checked = 1;
@@ -126,6 +140,9 @@ function loadSelectMode(defaultMode) {
 				checkbox.checked = 0;
 				checkboxChanged = true;
 			}
+			
+			// Stop if neither button is pressed
+			if (!lmbDown && !rmbDown) return;
 			
 			// Run checkbox changed handler to effect input underneath
 			checkboxChangedHandler(checkbox);
@@ -142,6 +159,7 @@ function loadSelectMode(defaultMode) {
 		return checkbox;
 	});
 	
+	// Changes UI between select mode and manual input
 	function changeSelectMode(enabled) {
 		// Show & hide checkboxes or text input fields
 		checkboxes.forEach(combo => combo.style.display = enabled ? "block" : "none");
@@ -152,17 +170,7 @@ function loadSelectMode(defaultMode) {
 			
 			inputs.forEach(function(input, index) {
 				let checkbox = input.nextElementSibling;
-				
-				// Check checkbox if day has hours assigned
-				let selectedHrs = Number(input.value);
-				checkbox.checked = selectedHrs === 7.5;
-				
-				// Highlight checkboxes that have work hours but not a full day
-				if (selectedHrs !== 7.5 && selectedHrs !== 0) {
-					checkbox.classList.add("semiChecked");
-				} else {
-					checkbox.classList.remove("semiChecked");
-				}
+				updateCheckedDisplay(input, checkbox, selectHours);
 			});
 		} else {
 			// Add tip to tell user how to quickly change multiple checkboxes
@@ -459,6 +467,7 @@ function correctLoginIEWarning() {
 chrome.storage.sync.get({
 	shortcutKeys: true,
 	selectMode: true,
+	selectHours: "7.5",
 	showBankHolidays: true,
 	holidayRegion: 'england-and-wales',
 	autoLogin: false,
@@ -591,7 +600,7 @@ chrome.storage.sync.get({
 			if (items.showBankHolidays) handleShowBankHolidays(myBankHolidays);
 			
 			if (pageContainsMenuBar()) {
-				loadSelectMode(items.selectMode); // Inject checkbox mode
+				loadSelectMode(items.selectMode, items.selectHours); // Inject checkbox mode
 				injectDraggingCheckboxSelection();
 			}			
 		});
