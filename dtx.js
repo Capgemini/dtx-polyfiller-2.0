@@ -362,13 +362,8 @@ function pageContainsMenuBar() {
 }
 
 
-// Adds container to hold custom buttons in menubar for calender pages
-// e.g. Select mode, auto fill etc
-function injectCustomButtonsContainer() {
-	// Get menu bar
-	let buttonRow = document.querySelector("#SubMenuUC1_SubMenu_div1 > table > tbody > tr");
-	
-	// Add separator
+// Builds a DTX-themed separator line to split up button groups
+function buildMenuBarSeparator() {
 	let separatorImg = document.createElement("img");
 	separatorImg.src = "./images/separator.gif";
 	separatorImg.border = "0";
@@ -376,7 +371,17 @@ function injectCustomButtonsContainer() {
 	separatorCell.valign = "middle";
 	separatorCell.align = "center";
 	separatorCell.appendChild(separatorImg);
-	buttonRow.appendChild(separatorCell);
+	return separatorCell;
+}
+
+// Adds container to hold custom buttons in menubar for calender pages
+// e.g. Select mode, auto fill etc
+function injectCustomButtonsContainer() {
+	// Get menu bar
+	let buttonRow = document.querySelector("#SubMenuUC1_SubMenu_div1 > table > tbody > tr");
+	
+	// Add separator
+	buttonRow.appendChild(buildMenuBarSeparator());
 	
 	// Add custom section
 	let customButtonsContainer = document.createElement("div");
