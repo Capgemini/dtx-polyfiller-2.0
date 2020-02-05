@@ -347,13 +347,15 @@ function injectAutoFillButton(selectHours) {
 function autoFillTaskNumber(taskNumber) {
 	let taskInput = document.getElementById("txtTaskNumber");
 	if (!!taskInput && taskInput.value == "") taskInput.value = taskNumber;
-	taskInput.dispatchEvent(new Event('mousedown')); // Trigger change handler
 }
 // Attempts to fill project code with user's default if nothing is entered yet
 function autoFillProjectCode(projectCode) {
 	let projectInput = document.getElementById("drpProjectCode_input");
 	if (!!projectInput && projectInput.value == "") projectInput.value = projectCode;
-	projectInput.dispatchEvent(new Event('mousedown')); // Trigger change handler
+	
+	// Trigger DTX change handler
+	const leftArrow = 37; // Fire left arrow as it's harmless and won't change the field value
+	projectInput.dispatchEvent(new KeyboardEvent('keydown', { keyCode: leftArrow } ));
 }
 
 
