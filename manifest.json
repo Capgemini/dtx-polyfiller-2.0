@@ -36,6 +36,14 @@
 			"js":[
 				"submit-claims/submit-claims-injector.js"
 			]
+		},
+		{
+			"matches":[
+				"*://*.capgemini.com/DTX.NET/PeriodOverView.aspx"
+			],
+			"js":[
+				"period-overview.js"
+			]
 		}
 	],
 	

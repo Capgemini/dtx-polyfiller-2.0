@@ -36,6 +36,7 @@ Many thanks to the original [DTX Polyfiller extension](https://github.com/Capgem
 - Shortcut keys (`CTRL+S`: save, `ESC`: home)
 - Menubar shortcut button to add "Standard Time in UK"
 - Graphical improvements and fixes
+- Highlight Period Overview days green that have full (configured) hours
 
 <br />
 
