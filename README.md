@@ -3,17 +3,17 @@ Fix DTX for Chrome and add a plethora of useful features!
 
 ## Preview
 <img
-  src="https://raw.githubusercontent.com/FreddieDev/dtx-polyfiller/master/art/Quick%20selection.gif"
+  src="https://github.com/FreddieDev/dtx-polyfiller-2.0/blob/master/art/Quick%20selection.gif"
   alt="Preview of quick day selection"
   height="270"
 />
 <img
-  src="https://raw.githubusercontent.com/FreddieDev/dtx-polyfiller/master/art/Settings.png"
+  src="https://github.com/FreddieDev/dtx-polyfiller-2.0/blob/master/art/Settings.png"
   alt="Preview of settings"
   height="270"
 />
 <img
-  src="https://raw.githubusercontent.com/FreddieDev/dtx-polyfiller/master/art/Cap%20UK%20front-page%20article.png"
+  src="https://github.com/FreddieDev/dtx-polyfiller-2.0/blob/master/art/Cap%20UK%20front-page%20article.png"
   alt="As seen on front-page of Cap UK"
   height="270"
 />
