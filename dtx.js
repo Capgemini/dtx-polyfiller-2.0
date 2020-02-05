@@ -347,11 +347,13 @@ function injectAutoFillButton(selectHours) {
 function autoFillTaskNumber(taskNumber) {
 	let taskInput = document.getElementById("txtTaskNumber");
 	if (!!taskInput && taskInput.value == "") taskInput.value = taskNumber;
+	taskInput.dispatchEvent(new Event('mousedown')); // Trigger change handler
 }
 // Attempts to fill project code with user's default if nothing is entered yet
 function autoFillProjectCode(projectCode) {
 	let projectInput = document.getElementById("drpProjectCode_input");
 	if (!!projectInput && projectInput.value == "") projectInput.value = projectCode;
+	projectInput.dispatchEvent(new Event('mousedown')); // Trigger change handler
 }
 
 
@@ -470,6 +472,7 @@ function correctLoginIEWarning() {
 	warningElem.classList.add("polyfilerCorrectWarning");
 }
 
+
 chrome.storage.sync.get({
 	shortcutKeys: true,
 	selectMode: true,
@@ -485,7 +488,6 @@ chrome.storage.sync.get({
 	autoFillProjectCode: "",
 	lastVersionUsed: null,
 }, function(items) {
-	
 	
 	// Set to true to simulate update from < 2.8.5
 	if (false) {
@@ -534,7 +536,7 @@ chrome.storage.sync.get({
 	
 	correctLoginIEWarning();
 	
-    if (items.autoLogin) {
+	if (items.autoLogin) {
 		// Add handler to block auto-login if user explicitly clicks logout
 		var logoutButton = document.querySelector("a[title='Logout']");
 		if (logoutButton) {
