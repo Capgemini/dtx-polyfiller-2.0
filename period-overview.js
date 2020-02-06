@@ -1,11 +1,12 @@
+
+// Uses user's selectHours setting to highlight full days in period overview calendar in green
 chrome.storage.sync.get({
-	selectHours: "7.5",
+	selectHours: 7.5,
 }, function(items) {
 	let dayFields = [...document.querySelectorAll("#calDates_tabCalendar > tbody input")];
-	let selectHours = parseInt(items.selectHours) || 0;
 
 	dayFields.map(dayField => {
-		let intVal = parseInt(dayField.value) || 0;
-		if (intVal == selectHours) dayField.style.background = "#0e68";
+		let intVal = parseFloat(dayField.value) || 0; // If field has no value use 0
+		if (intVal == items.selectHours) dayField.style.background = "#0e68";
 	});
 });

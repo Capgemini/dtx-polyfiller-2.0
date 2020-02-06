@@ -20,7 +20,6 @@
 			"matches":[
 				"*://*.capgemini.com/DTX.NET/*"
 			],
-			"run_at": "document_end",
 			"css":[
 				"dtx.css"
 			],
@@ -28,6 +27,17 @@
 				"CryptoJS.js",
 				"sharedFunctions.js",
 				"dtx.js"
+			]
+		},
+		{
+			"matches":[
+				"*://*.capgemini.com/DTX.NET/item.aspx*"
+			],
+			"css":[
+				"pattern-fill/pattern-fill.css"
+			],
+			"js":[
+				"pattern-fill/pattern-fill.js"
 			]
 		},
 		{
@@ -42,7 +52,6 @@
 			"matches":[
 				"*://*.capgemini.com/DTX.NET/PeriodOverView.aspx"
 			],
-			"run_at": "document_end",
 			"js":[
 				"period-overview.js"
 			]
@@ -50,15 +59,16 @@
 	],
 	
 	"options_ui":{
-		"page":"options.html",
+		"page":"options/options.html",
 		"open_in_tab":false
 	},
 	"browser_action":{
-		"default_popup":"options.html"
+		"default_popup":"options/options.html"
 	},
 	
 	"web_accessible_resources":[
 		"submit-claims/submit-claims-overrides.js",
-		"images/*"
+		"images/*",
+		"pattern-fill/*"
 	]
 }

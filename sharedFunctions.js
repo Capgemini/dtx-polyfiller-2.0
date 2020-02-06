@@ -1,5 +1,18 @@
 const setting_apiURL = "https://www.gov.uk/bank-holidays.json"; // URL to fetch up to date bank holidays
 
+
+
+
+// Injects a content script into the page with access to page functions
+function injectScript(scriptStr) {	
+	var script = document.createElement('script');
+	script.textContent = scriptStr;
+	document.head.appendChild(script);
+	script.remove();
+}
+
+
+
 // Pulls bank holidays from UK gov site and sends them to handler
 function fetchBankHolidaysJSON(callback) {
     const endpoint = setting_apiURL;

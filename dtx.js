@@ -4,16 +4,6 @@ var checkboxChanged = false; // Flag to block context menu showing
 
 
 
-// Injects a content script into the page with access to page functions
-function injectScript(scriptStr) {	
-	var script = document.createElement('script');
-	script.textContent = scriptStr;
-	document.head.appendChild(script);
-	script.remove();
-}
-
-
-
 // Forcefully shows invisible buttons
 function fixMissingButtons() {
 	document.querySelectorAll('input[type="button"]')
@@ -41,11 +31,11 @@ function fixInputEventHandlers() {
 
 // Sets a checkbox's checked state based off the input it's representing
 function updateCheckedDisplay(input, checkbox, selectHours) {
-	let selectedHrs = Number(input.value);
-	checkbox.checked = selectedHrs === Number(selectHours);
+	let inputHours = parseFloat(input.value) || 0;
+	checkbox.checked = inputHours === selectHours;
 
 	// Highlight checkboxes that have work hours but not a full day
-	if (Number(selectedHrs) !== Number(selectHours) && selectedHrs !== 0) {
+	if (inputHours !== selectHours && inputHours !== 0) {
 		checkbox.classList.add("semiChecked");
 	} else {
 		checkbox.classList.remove("semiChecked");
@@ -187,7 +177,8 @@ function loadSelectMode(defaultMode, selectHours) {
     selectModeLabel.htmlFor = selectModeCheckboxName; /* Link clicks to checkbox element */
     selectModeLabel.innerText = "Select mode";
 	
-	let customButtonsContainer = document.getElementById("customButtonsContainer");	
+	let customButtonsContainer = document.getElementById("customButtonsContainer");
+	customButtonsContainer.appendChild(buildMenuBarSeparator()); // Add separator before checkbox
 	customButtonsContainer.appendChild(selectModeCheckbox);
 	customButtonsContainer.appendChild(selectModeLabel);
 }
@@ -290,22 +281,36 @@ function autoLogin(employeeNumber) {
 }
 
 
+// Injects a button into calender views to select work days in a pattern
+// Func is async, it returns 1 when it completes
+async function injectPatternFillButton(selectHours) {
+	const response = await fetch(chrome.extension.getURL("pattern-fill/pattern-fill.html"));
+	const patternFillHTML = await response.text();
+
+	// Add autofill button to menubar
+	let customButtonsContainer = document.getElementById("customButtonsContainer");
+	customButtonsContainer.insertAdjacentHTML('beforeend', patternFillHTML);
+	
+	return Promise.resolve(1);
+}
+
+
 // Injects a button into calender views to quick-select multiple days
 const fillModes = Object.freeze({"businessdays":0, "all":1, "none":2});
 function injectAutoFillButton(selectHours) {
 	
 	// Create fill button
 	let autoFillButton = document.createElement("button");
+	autoFillButton.type = "button"; // Stop submit running on click
 	autoFillButton.innerText = "Auto-fill";
 	autoFillButton.id = "autoFillButton";
 	
 	let fillModeIndex = 0;
-	autoFillButton.addEventListener('click', (event) => {
+	autoFillButton.addEventListener('mousedown', (event) => {
 		event.preventDefault();
 
 		let inputs = [...document.querySelectorAll("#calDates_tabCalendar > tbody input")];
 		
-		let weekDayIndex = 0;
 		inputs.forEach(function(input) {
 			let inputIsWeekend = input.classList.contains("weekend");
 			let inputIsBankHoliday = input.classList.contains("bankHolidayDay");
@@ -353,7 +358,7 @@ function autoFillProjectCode(projectCode) {
 	let projectInput = document.getElementById("drpProjectCode_input");
 	if (!!projectInput && projectInput.value == "") projectInput.value = projectCode;
 	
-	// Trigger DTX change handler
+	// Trigger DTX project code change handler
 	const leftArrow = 37; // Fire left arrow as it's harmless and won't change the field value
 	projectInput.dispatchEvent(new KeyboardEvent('keydown', { keyCode: leftArrow } ));
 }
@@ -475,22 +480,9 @@ function correctLoginIEWarning() {
 }
 
 
-chrome.storage.sync.get({
-	shortcutKeys: true,
-	selectMode: true,
-	selectHours: "7.5",
-	showBankHolidays: true,
-	holidayRegion: 'england-and-wales',
-	autoLogin: false,
-	stopAutoLogin: false,
-	employeeNumber: "",
-	specialToken: "",
-	autoFillFields: true,
-	autoFillTaskNumber: "1",
-	autoFillProjectCode: "",
-	lastVersionUsed: null,
-}, function(items) {
-	
+// Starts extension
+async function LoadPolyfiller(items) {
+
 	// Set to true to simulate update from < 2.8.5
 	if (false) {
 		chrome.storage.sync.set({
@@ -578,7 +570,6 @@ chrome.storage.sync.get({
 	}
 
 
-
 	if (items.shortcutKeys) injectShortcutKeys();
 
 
@@ -587,6 +578,7 @@ chrome.storage.sync.get({
 		if (pageContainsMenuBar()) {
 			injectCustomButtonsContainer();
 			injectAutoFillButton(items.selectHours);
+			await injectPatternFillButton(items.selectHours); // Wait for injection to finish before continuing
 		}
 		
 		if (items.autoFillFields) {
@@ -603,8 +595,7 @@ chrome.storage.sync.get({
 				if (!myBankHolidays) throw "Bank holidays JSON from gov.uk didn't contain your region!";
 				myBankHolidays = holidaysJSON[items.holidayRegion].events;
 			} catch(e) {
-				console.warn("ERROR SHOWING BANK HOLIDAYS:\n" + e);
-				return;
+				throw new Error("ERROR SHOWING BANK HOLIDAYS:\n" + e);
 			}
 			
 			if (items.showBankHolidays) handleShowBankHolidays(myBankHolidays);
@@ -617,4 +608,25 @@ chrome.storage.sync.get({
 	}
 	
 	polyfilerLog("Loaded!");
+	return Promise.resolve(1);
+}
+
+
+// Load settings from storage (with defaults) and run starter func
+chrome.storage.sync.get({
+	shortcutKeys: true,
+	selectMode: true,
+	selectHours: 7.5,
+	showBankHolidays: true,
+	holidayRegion: 'england-and-wales',
+	autoLogin: false,
+	stopAutoLogin: false,
+	employeeNumber: "",
+	specialToken: "",
+	autoFillFields: true,
+	autoFillTaskNumber: "1", // Task number is sometimes a string
+	autoFillProjectCode: "",
+	lastVersionUsed: null,
+}, function(items) {
+	LoadPolyfiller(items);
 });

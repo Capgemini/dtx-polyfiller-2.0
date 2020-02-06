@@ -47,9 +47,6 @@ span.dtxTitle {
 	padding-top: 5px;
 	transform: scale(0.8);
 }
-#autoFillButton {
-	margin: 0 5px;
-}
 
 /* Block text/element selection inside calender view (e.g. date labels) */
 #calDates_tabCalendar > tbody > tr > td > * {
@@ -146,9 +143,11 @@ input[type=checkbox].semiChecked:after {
 	align-items: center;
 	justify-content: center;
 }
-#customButtonsContainer input {
-	width: 20px;
-	height: 20px;
+#customButtonsContainer > button:first-child {
+	margin-left: 5px;
+}
+#customButtonsContainer button {
+	margin-right: 5px;
 }
 
 /* Styling to correct warning that DTX only supports IE */

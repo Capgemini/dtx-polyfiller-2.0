@@ -1,9 +1,15 @@
+// Clears all settings
+function reset_options() {
+	chrome.storage.sync.clear(function() {
+		location.reload(); // Reload menu after reset
+	})
+}
 
 // Saves options to chrome.storage
 function save_options() {
 	var shortcutKeys = document.getElementById('shortcutKeys').checked;
 	var selectMode = document.getElementById('selectMode').checked;
-	var selectHours = document.getElementById('selectHours').value;
+	var selectHours = parseFloat(document.getElementById('selectHours').value) || 7.5;
 	
 	var showBankHolidays = document.getElementById('showBankHolidays').checked;
 	var holidayRegion = document.getElementById('holidayRegion').value;
@@ -61,7 +67,7 @@ function restore_options() {
 	chrome.storage.sync.get({
 		shortcutKeys: true,
 		selectMode: true,
-		selectHours: "",
+		selectHours: null,
 		showBankHolidays: true,
 		holidayRegion: 'england-and-wales',
 		autoLogin: false,
@@ -117,6 +123,7 @@ function fill_region_options() {
 
 document.addEventListener('DOMContentLoaded', fill_region_options);
 document.getElementById('save').addEventListener('click', save_options);
+document.getElementById('reset').addEventListener('click', reset_options);
 
 // Add support for maxLength field to number inputs
 document.querySelectorAll('input[type="number"]').forEach(function(input) {
