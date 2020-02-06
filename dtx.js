@@ -306,12 +306,9 @@ function injectAutoFillButton(selectHours) {
 	autoFillButton.id = "autoFillButton";
 	
 	let fillModeIndex = 0;
-	autoFillButton.addEventListener('mousedown', (event) => {
-		event.preventDefault();
-
+	autoFillButton.addEventListener('click', () => {
 		let inputs = [...document.querySelectorAll("#calDates_tabCalendar > tbody input")];
-		
-		inputs.forEach(function(input) {
+		inputs.forEach((input) => {
 			let inputIsWeekend = input.classList.contains("weekend");
 			let inputIsBankHoliday = input.classList.contains("bankHolidayDay");
 			

@@ -11,6 +11,22 @@ function injectScript(scriptStr) {
 	script.remove();
 }
 
+// Returns true if number is odd
+function isOdd(num) {
+    return (num % 2) == 1;
+}
+
+// Checks if an element (child) is inside another element (parent)
+function isDescendant(parent, child) {
+    var node = child.parentNode;
+    while (node != null) {
+        if (node == parent) {
+            return true;
+        }
+        node = node.parentNode;
+    }
+    return false;
+}
 
 
 // Pulls bank holidays from UK gov site and sends them to handler
