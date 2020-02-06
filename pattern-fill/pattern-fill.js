@@ -24,7 +24,18 @@ function runPatternFill() {
     const startDay = parseInt(document.getElementById("patternFillStartDay").value) || 1;
     const daysOn = parseInt(document.getElementById("patternFillDaysOn").value) || 4;
     const daysOff = parseInt(document.getElementById("patternFillDaysOff").value) || 4;
+    const selectHours = parseFloat(document.getElementById("patternFillSelectHours").value) || 7.5;
     const includeBankHolidays = document.getElementById("patternFillIncludeBankHolidays").checked;
+
+    // Save settings to Chrome storage
+    chrome.storage.sync.set({
+        patternFill_startDay: startDay,
+        patternFill_daysOn: daysOn,
+        patternFill_daysOff: daysOff,
+        patternFill_includeBankHolidays: includeBankHolidays,
+        selectHours: selectHours,
+    });
+
 
     let inputs = [...document.querySelectorAll("#calDates_tabCalendar > tbody input")];
     inputs.forEach((input) => {
@@ -79,7 +90,7 @@ function runPatternFill() {
             input.checked = shouldSelect;
             input.classList.remove("semiChecked");
         } else {
-            input.value = shouldSelect ? 9999 : "";
+            input.value = shouldSelect ? selectHours : "";
         }
     });
 }

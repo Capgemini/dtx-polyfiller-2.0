@@ -283,14 +283,21 @@ function autoLogin(employeeNumber) {
 
 // Injects a button into calender views to select work days in a pattern
 // Func is async, it returns 1 when it completes
-async function injectPatternFillButton(selectHours) {
+async function injectPatternFill(patternFill_startDay, patternFill_daysOn, patternFill_daysOff, patternFill_includeBankHolidays, selectHours) {
 	const response = await fetch(chrome.extension.getURL("pattern-fill/pattern-fill.html"));
 	const patternFillHTML = await response.text();
 
 	// Add autofill button to menubar
 	let customButtonsContainer = document.getElementById("customButtonsContainer");
 	customButtonsContainer.insertAdjacentHTML('beforeend', patternFillHTML);
-	
+
+	// Set default settings from Chrome storage
+	document.getElementById("patternFillStartDay").value = patternFill_startDay;
+    document.getElementById("patternFillDaysOn").value = patternFill_daysOn;
+    document.getElementById("patternFillDaysOff").value = patternFill_daysOff;
+    document.getElementById("patternFillSelectHours").value = selectHours;
+	document.getElementById("patternFillIncludeBankHolidays").checked = patternFill_includeBankHolidays;
+
 	return Promise.resolve(1);
 }
 
@@ -575,7 +582,15 @@ async function LoadPolyfiller(items) {
 		if (pageContainsMenuBar()) {
 			injectCustomButtonsContainer();
 			injectAutoFillButton(items.selectHours);
-			await injectPatternFillButton(items.selectHours); // Wait for injection to finish before continuing
+
+			// Inject pattern filler and wait completion before continuing
+			await injectPatternFill(
+				items.patternFill_startDay,
+				items.patternFill_daysOn,
+				items.patternFill_daysOff,
+				items.patternFill_includeBankHolidays,
+				items.selectHours
+			);
 		}
 		
 		if (items.autoFillFields) {
@@ -611,19 +626,29 @@ async function LoadPolyfiller(items) {
 
 // Load settings from storage (with defaults) and run starter func
 chrome.storage.sync.get({
+	lastVersionUsed: null,
+
 	shortcutKeys: true,
 	selectMode: true,
 	selectHours: 7.5,
+
 	showBankHolidays: true,
 	holidayRegion: 'england-and-wales',
+
 	autoLogin: false,
-	stopAutoLogin: false,
 	employeeNumber: "",
+	stopAutoLogin: false,
 	specialToken: "",
+
 	autoFillFields: true,
 	autoFillTaskNumber: "1", // Task number is sometimes a string
 	autoFillProjectCode: "",
-	lastVersionUsed: null,
+	
+	patternFill_startDay: 1,
+	patternFill_daysOn: 4,
+	patternFill_daysOff: 4,
+	patternFill_includeBankHolidays: true,
+
 }, function(items) {
 	LoadPolyfiller(items);
 });
