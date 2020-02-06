@@ -591,11 +591,11 @@ async function LoadPolyfiller(items) {
 				items.patternFill_includeBankHolidays,
 				items.selectHours
 			);
-		}
 		
-		if (items.autoFillFields) {
-			autoFillTaskNumber(items.autoFillTaskNumber);
-			autoFillProjectCode(items.autoFillProjectCode);
+			if (items.autoFillFields) {
+				autoFillTaskNumber(items.autoFillTaskNumber);
+				autoFillProjectCode(items.autoFillProjectCode);
+			}
 		}
 		
 		// Inject bank holiday features
