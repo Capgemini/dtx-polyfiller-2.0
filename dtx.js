@@ -475,7 +475,7 @@ function injectDraggingCheckboxSelection() {
 function correctLoginIEWarning() {
 	if (!window.location.href.includes("/Login.aspx")) return;
 
-	var warningElem = document.querySelector("#tabHolder > tbody > tr:nth-child(3) > td");
+	let warningElem = document.querySelector("#tabHolder > tbody > tr:nth-child(3) > td");
 	warningElem.classList.add("polyfilerCorrectWarning");
 }
 
@@ -532,7 +532,7 @@ async function LoadPolyfiller(items) {
 	
 	if (items.autoLogin) {
 		// Add handler to block auto-login if user explicitly clicks logout
-		var logoutButton = document.querySelector("a[title='Logout']");
+		let logoutButton = document.querySelector("a[title='Logout']");
 		if (logoutButton) {
 			logoutButton.addEventListener("click", function() {
 				chrome.storage.sync.set({ stopAutoLogin: true });
@@ -560,7 +560,7 @@ async function LoadPolyfiller(items) {
 	}
 	
 	// Check if the user is logged in
-	var loggedIn = pageContainsMenuBar(); // menubar is only found on logged-in pages
+	const loggedIn = pageContainsMenuBar(); // menubar is only found on logged-in pages
 	if (loggedIn) {
 		
 		// Clear stopAutoLogin field if set
