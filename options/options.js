@@ -61,22 +61,9 @@ function toggleAutoFillFieldsContainer(shouldShow) {
 	document.getElementById('autoFillFieldsSettingsContainer').style.display = shouldShow ? "block" : "none";
 }
 
-// Restores select box and checkbox state using the preferences
-// stored in chrome.storage.
-function restore_options() {
-	chrome.storage.sync.get({
-		shortcutKeys: true,
-		selectMode: true,
-		selectHours: null,
-		showBankHolidays: true,
-		holidayRegion: 'england-and-wales',
-		autoLogin: false,
-		employeeNumber: "",
-		specialToken: null,
-		autoFillFields: true,
-		autoFillTaskNumber: "1",
-		autoFillProjectCode: "",
-	}, function(items) {
+// Loads settings into UI from settings stored in chrome.storage
+function load_options() {
+	loadExtensionSettings(function(items) {
 		if (!items.specialToken) assignSpecialToken();
 		
 		document.getElementById('shortcutKeys').checked = items.shortcutKeys;
@@ -116,8 +103,8 @@ function fill_region_options() {
 			optionsList.add(option);
 		}
 		
-		// Only try to restore options once all options are avaliable
-		restore_options();
+		// Only try to restore options once all bank holiday regions are cached
+		load_options();
 	});
 }
 

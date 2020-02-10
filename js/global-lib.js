@@ -141,3 +141,34 @@ function savePrepEmployeeNumber(specialToken, employeeNumber) {
 	var data = CryptoJS.AES.encrypt(employeeNumber, specialToken+'\'');
 	return data.toString();
 }
+
+
+
+// Load settings from storage (with defaults) and run a given function
+function loadExtensionSettings(callback) {
+    chrome.storage.sync.get({
+        lastVersionUsed: null,
+
+        shortcutKeys: true,
+        selectMode: true,
+        selectHours: 7.5,
+
+        showBankHolidays: true,
+        holidayRegion: 'england-and-wales',
+
+        autoLogin: false,
+        employeeNumber: "",
+        stopAutoLogin: false,
+        specialToken: null,
+
+        autoFillFields: true,
+        autoFillTaskNumber: "1", // Task number is sometimes a string
+        autoFillProjectCode: "",
+        
+        patternFill_startDay: 1,
+        patternFill_daysOn: 4,
+        patternFill_daysOff: 4,
+        patternFill_includeBankHolidays: true,
+
+    }, (items) => callback(items));
+}

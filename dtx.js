@@ -579,30 +579,4 @@ async function LoadPolyfiller(items) {
 
 
 // Load settings from storage (with defaults) and run starter func
-chrome.storage.sync.get({
-	lastVersionUsed: null,
-
-	shortcutKeys: true,
-	selectMode: true,
-	selectHours: 7.5,
-
-	showBankHolidays: true,
-	holidayRegion: 'england-and-wales',
-
-	autoLogin: false,
-	employeeNumber: "",
-	stopAutoLogin: false,
-	specialToken: "",
-
-	autoFillFields: true,
-	autoFillTaskNumber: "1", // Task number is sometimes a string
-	autoFillProjectCode: "",
-	
-	patternFill_startDay: 1,
-	patternFill_daysOn: 4,
-	patternFill_daysOff: 4,
-	patternFill_includeBankHolidays: true,
-
-}, function(items) {
-	LoadPolyfiller(items);
-});
+loadExtensionSettings((items) => LoadPolyfiller(items));
