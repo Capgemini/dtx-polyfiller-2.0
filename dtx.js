@@ -88,7 +88,7 @@ function loadSelectMode(defaultMode, selectHours) {
 			updateCheckedDisplay(input, checkbox, selectHours);
 			
 			// Call site function to update "Quantity" (total hrs) field
-			var evt = new Event("callCalculateTotalsFunc", {"bubbles":true, "cancelable":false});
+			let evt = new Event("callCalculateTotalsFunc", {"bubbles":true, "cancelable":false});
 			document.dispatchEvent(evt); // Fire the event
 		}
 		
@@ -199,7 +199,7 @@ function injectShortcutKeys() {
 		if (event.ctrlKey && keySPressed) {
 			event.preventDefault(); // Prevent browser's save dialog showing
 			
-			var evt = new Event("callSaveFuncs", {"bubbles":true, "cancelable":false});
+			let evt = new Event("callSaveFuncs", {"bubbles":true, "cancelable":false});
 			document.dispatchEvent(evt); // Fire the event
 			
 		} else if (event.key === "Escape") {
@@ -475,73 +475,27 @@ function injectDraggingCheckboxSelection() {
 	}
 }
 
-// Corrects the warning that only IE is compatible
-function correctLoginIEWarning() {
-	if (!window.location.href.includes("/Login.aspx")) return;
 
-	let warningElem = document.querySelector("#tabHolder > tbody > tr:nth-child(3) > td");
-	warningElem.classList.add("polyfilerCorrectWarning");
+// Add handler to save flag to prevent future auto-logins if user explicitly clicks logout
+function injectLogoutHandler() {
+	let logoutButton = document.querySelector("a[title='Logout']");
+	if (logoutButton) {
+		logoutButton.addEventListener("click", function() {
+			chrome.storage.sync.set({ stopAutoLogin: true });
+		});
+	}
 }
 
 
 // Starts extension
 async function LoadPolyfiller(items) {
 
-	// Set to true to simulate update from < 2.8.5
-	if (false) {
-		chrome.storage.sync.set({
-			employeeNumber: "290937",
-			autoLogin: true,
-			stopAutoLogin: null,
-			lastVersionUsed: null,
-		});
-		return
-	}
-
-	// Check if user has version that stores employeeNumber differently
-	if (!items.lastVersionUsed || versionCompare(items.lastVersionUsed, "2.8.5") == -1) {
-		alert("Polyfiller 2.0 updated!\nPlease review it on Chrome if you like it!");
-		
-		// If employeeNumber is set, repair it
-		if (items.employeeNumber) {
-			
-			assignSpecialToken(function(newToken) {
-				chrome.storage.sync.set({
-					employeeNumber: savePrepEmployeeNumber(newToken, items.employeeNumber),
-				}, function() {
-					// Update version number before reloading to prevent
-					// Fix being re-ran on reload
-					updateExtensionVersion(function() {
-						location.reload(); // Reload page to apply auto-login						
-					});
-				});
-			})
-
-			items.autoLogin = null; // Block auto-login cached setting this session
-		}
-	}
-	
-	// Update stored version number if changed
-	/* ALL UPDATE FIXES BE APPLIED ABOVE THIS POINT */
-	if (items.lastVersionUsed != getExtensionVersion()) {
-		// Update cached variable immediatly
-		items.lastVersionUsed = getExtensionVersion();
-		
-		updateExtensionVersion();
-	}
-	
-	
-	
-	correctLoginIEWarning();
+	// Handle any requirements to apply updates
+	items = processExtensionUpdates(items);
 	
 	if (items.autoLogin) {
-		// Add handler to block auto-login if user explicitly clicks logout
-		let logoutButton = document.querySelector("a[title='Logout']");
-		if (logoutButton) {
-			logoutButton.addEventListener("click", function() {
-				chrome.storage.sync.set({ stopAutoLogin: true });
-			});
-		}
+		
+		injectLogoutHandler();
 		
 		if (!items.stopAutoLogin && items.specialToken && items.employeeNumber) {
 			

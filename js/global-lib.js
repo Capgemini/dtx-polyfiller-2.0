@@ -1,3 +1,11 @@
+/*
+    global-lib.js
+     This file contains a collection of functions and variables used across the entire extension.
+     As such, this script should be injected on all DTX pages before other scripts
+*/
+
+
+// Variables
 const setting_apiURL = "https://www.gov.uk/bank-holidays.json"; // URL to fetch up to date bank holidays
 
 
@@ -46,27 +54,6 @@ function polyfilerLog(message) {
 	console.log("%c[DTX Polyfiller v" + getExtensionVersion() + "]%c: " + message,
 			"font-size: 14px; color: #88f", "font-size: 14px; color: #fff");
 }
-
-
-
-
-// Cache extension version
-var extensionVersion = chrome.runtime.getManifest().version;
-
-// Gets version number as a string (e.g. 1.2.4)
-function getExtensionVersion() {
-	return extensionVersion;
-}
-
-// Asynchronously updates version number in Chrome storage
-function updateExtensionVersion(callback) {
-	chrome.storage.sync.set({
-		lastVersionUsed: getExtensionVersion(),
-	}, function() {
-		if (callback) callback();
-	});
-}
-
 
 
 

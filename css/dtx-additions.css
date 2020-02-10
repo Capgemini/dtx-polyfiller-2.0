@@ -1,47 +1,3 @@
-/* Fix pages having a scrollbar */
-#dgHolidaySubmitClaims_main, #dgHolidaySubmitClaims_main td, #dgHolidaySubmitClaims_div {
-  height: auto !important;
-}
-
-
-/* Fix for popout menus showing behind table header row */
-#jsddm_summary li ul, #jsddm_item li ul { z-index: 1000; }
-
-/* Fix popout menu options having huge padding */
-#jsddm_summary li ul li, #jsddm_item li ul li { display: list-item !important; }
-
-/* Fix popout menu options flickering padding on hover */
-#jsddm_summary li ul li a, #jsddm_item li ul li a { padding: 3px 4px !important; }
-
-/* Improve popout menu readability/clickability */
-#jsddm_summary li ul li a, #jsddm_item li ul li a { font-size: 11px !important; }
-#jsddm_summary li ul li, #jsddm_item li ul li { padding: none !important; }
-
-/* Fix page being too big creating vertical scrollbar
-	Note: Form often has different IDs across different pages but is always
-	body's first child
-*/
-body > form { margin-block-end: unset; }
-
-/* Fix menubar button hover backgrounds being too short */
-a.actionIcon {
-	min-height: 100%;
-    display: block;
-}
-
-/* Replace horrid comic sans and red-on-blue font */
-span.dtxTitle {
-	font-family: "Trebuchet MS", serif !important;
-	color: #000 !important;
-}
-
-/* Fix logo stretch and give padding */
-#ImgCGLogo {
-	height: 30px;
-    padding: 5px;
-}
-
-
 /* Custom menu bar buttons */
 #ukTimeButton {
 	padding-top: 5px;
@@ -65,7 +21,7 @@ span.dtxTitle {
 	
 	text-align: right;
 	color: #000;
-	text-size: 8px;
+	font-size: 16px;
 }
 
 /* Weekend stylings for checkboxes */
@@ -148,20 +104,4 @@ input[type=checkbox].semiChecked:after {
 }
 #customButtonsContainer button {
 	margin-right: 5px;
-}
-
-/* Styling to correct warning that DTX only supports IE */
-.polyfilerCorrectWarning {
-	text-decoration: line-through !important;
-}
-.polyfilerCorrectWarning:after {
-	content: "DTX Polyfiler 2.0 loaded \A Chrome is now supported, enjoy!";
-	white-space: pre; /* Add \A newline support */
-	
-	display: inline-block;
-	height: auto;
-	width: 100%;
-	
-	font-size: 22px;
-	color: #1a7;
 }
