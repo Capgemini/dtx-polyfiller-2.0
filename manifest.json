@@ -45,6 +45,7 @@
 			"matches":[
 				"*://*.capgemini.com/DTX.NET/Login.aspx*"
 			],
+			"run_at": "document_idle",
 			"css":[
 				"css/login-message.css"
 			],
@@ -56,6 +57,7 @@
 			"matches":[
 				"*://*.capgemini.com/DTX.NET/item.aspx*"
 			],
+			"run_at": "document_idle",
 			"css":[
 				"pattern-fill/pattern-fill.css"
 			],
@@ -68,6 +70,7 @@
 			"matches":[
 				"*://*.capgemini.com/DTX.NET/SubmitClaims.aspx"
 			],
+			"run_at": "document_idle",
 			"js":[
 				"submit-claims/submit-claims-injector.js"
 			]
@@ -76,6 +79,7 @@
 			"matches":[
 				"*://*.capgemini.com/DTX.NET/PeriodOverView.aspx"
 			],
+			"run_at": "document_idle",
 			"js":[
 				"dtx-period-overview.js"
 			]
