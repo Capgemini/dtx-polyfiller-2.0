@@ -225,7 +225,7 @@ setupAuthorisersAndValidatorsStep = function () {
         'op': 'getAuthorisers',
         'xml': escape(xmlSerialiser.serializeToString(projectsTable))
     };
-    $.post("./AjaxHandlers/ClaimSubmissionHandler.aspx", httpSubmissionCollection, function (data) {
+    $.post("./AjaxHandlers/ClaimSubmissionHandler.aspx", httpSubmissionCollection, (data) => {
         // We should now have been returned a version of the projectsTable XML that contains Authoriser elements
         setupAuthorisers(data);
     });
@@ -302,7 +302,7 @@ submitClaims = function () {
         'xml': escape(xmlSerialiser.serializeToString(projectsTable))
     };
 
-    $.post("./AjaxHandlers/ClaimSubmissionHandler.aspx" , httpSubmissionCollection , function(data){
+    $.post("./AjaxHandlers/ClaimSubmissionHandler.aspx" , httpSubmissionCollection , (data) => {
         // This is the returned data for your submission. ClaimID's will have been set on the elements, and this was
         // previously used to give you a little alert listing which claims have been created.
         projectsTable = parseXML( data );

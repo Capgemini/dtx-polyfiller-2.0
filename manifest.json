@@ -20,7 +20,7 @@
 			"matches":[
 				"*://*.capgemini.com/DTX.NET/*"
 			],
-			"run_at": "document_end",
+			"run_at": "document_start",
 			"css":[
 				"css/dtx-fixes.css",
 				"css/dtx-additions.css"
@@ -28,7 +28,15 @@
 			"js":[
 				"js/CryptoJS.js",
 				"js/global-lib.js",
-				"js/updates-lib.js",
+				"js/updates-lib.js"
+			]
+		},
+		{
+			"matches":[
+				"*://*.capgemini.com/DTX.NET/*"
+			],
+			"run_at": "document_end",
+			"js":[
 				"dtx.js"
 			]
 		},
@@ -39,9 +47,11 @@
 			],
 			"css":[
 				"css/login-message.css"
+			],
+			"js":[
+				"dtx-login.js"
 			]
 		},
-
 		{
 			"matches":[
 				"*://*.capgemini.com/DTX.NET/item.aspx*"
@@ -50,10 +60,10 @@
 				"pattern-fill/pattern-fill.css"
 			],
 			"js":[
+				"dtx-item.js",
 				"pattern-fill/pattern-fill.js"
 			]
 		},
-
 		{
 			"matches":[
 				"*://*.capgemini.com/DTX.NET/SubmitClaims.aspx"
@@ -62,13 +72,12 @@
 				"submit-claims/submit-claims-injector.js"
 			]
 		},
-
 		{
 			"matches":[
 				"*://*.capgemini.com/DTX.NET/PeriodOverView.aspx"
 			],
 			"js":[
-				"js/period-overview.js"
+				"dtx-period-overview.js"
 			]
 		}
 	],

@@ -1,8 +1,12 @@
+/*
+    dtx-period-overview.js
+     This file handles extra features for the Period Overview page
+*/
 
 // Uses user's selectHours setting to highlight full days in period overview calendar in green
 chrome.storage.sync.get({
 	selectHours: 7.5,
-}, function(items) {
+}, (items) => {
 	let dayFields = [...document.querySelectorAll("#calDates_tabCalendar > tbody input")];
 
 	dayFields.map(dayField => {

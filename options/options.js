@@ -1,6 +1,6 @@
 // Clears all settings
 function reset_options() {
-	chrome.storage.sync.clear(function() {
+	chrome.storage.sync.clear(() => {
 		location.reload(); // Reload menu after reset
 	})
 }
@@ -23,7 +23,7 @@ function save_options() {
 	
 	chrome.storage.sync.get({
 		specialToken: ""
-	}, function(items) {
+	}, (items) => {
 		
 		chrome.storage.sync.set({
 			shortcutKeys: shortcutKeys,
@@ -36,11 +36,11 @@ function save_options() {
 			autoFillFields: autoFillFields,
 			autoFillTaskNumber: autoFillTaskNumber,
 			autoFillProjectCode: autoFillProjectCode,
-		}, function() {
+		}, () => {
 			// Update status to let user know options were saved.
 			var status = document.getElementById('status');
 			status.textContent = 'Options saved!';
-			setTimeout(function() {
+			setTimeout(() => {
 				status.textContent = '';
 			}, 2000);
 		});
@@ -63,7 +63,22 @@ function toggleAutoFillFieldsContainer(shouldShow) {
 
 // Loads settings into UI from settings stored in chrome.storage
 function load_options() {
-	loadExtensionSettings(function(items) {
+	LoadExtensionSettings((items) => {
+
+		// Fetches bank holidays from UK gov and fills out the settings list
+		getBankHolidaysJSON(items, (holidayRegions, holidayEvents) => {
+			let optionsList = document.getElementById("holidayRegion");
+			
+			holidayRegions.forEach((region) => {
+				let option = document.createElement("option");
+				option.text = region;
+				option.value = region;
+				
+				optionsList.add(option);
+			})
+		});
+
+
 		if (!items.specialToken) assignSpecialToken();
 		
 		document.getElementById('shortcutKeys').checked = items.shortcutKeys;
@@ -86,45 +101,26 @@ function load_options() {
 }
 
 
-// Fetches bank holidays from UK gov and fills out the settings list
-function fill_region_options() {
-	fetchBankHolidaysJSON(function(holidaysJSON) {
-		let optionsList = document.getElementById("holidayRegion");
-		
-		let regions = Object.keys(holidaysJSON)
-		
-		for (var i = 0; i < regions.length; i++){
-			let region = regions[i];
-			
-			let option = document.createElement("option");
-			option.text = region;
-			option.value = region;
-			
-			optionsList.add(option);
-		}
-		
-		// Only try to restore options once all bank holiday regions are cached
-		load_options();
-	});
-}
-
-document.addEventListener('DOMContentLoaded', fill_region_options);
 document.getElementById('save').addEventListener('click', save_options);
 document.getElementById('reset').addEventListener('click', reset_options);
 
 // Add support for maxLength field to number inputs
 document.querySelectorAll('input[type="number"]').forEach(function(input) {
-	input.addEventListener('input', function(event) {
+	input.addEventListener('input', (event) => {
 		this.value = this.value.slice(0, this.maxLength);
 	});
 });
 
-document.getElementById("showBankHolidays").addEventListener("change", function(event) {
+document.getElementById("showBankHolidays").addEventListener("change", (event) => {
 	toggleBankHolidayContainer(event.target.checked);
 });
-document.getElementById("autoLogin").addEventListener("change", function(event) {
+document.getElementById("autoLogin").addEventListener("change", (event) => {
 	toggleAutoLoginContainer(event.target.checked);
 });
-document.getElementById("autoFillFields").addEventListener("change", function(event) {
+document.getElementById("autoFillFields").addEventListener("change", (event) => {
 	toggleAutoFillFieldsContainer(event.target.checked);
 });
+
+
+// Load options on startup
+load_options();

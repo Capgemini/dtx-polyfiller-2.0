@@ -6,10 +6,17 @@
 
 
 // Variables
-const setting_apiURL = "https://www.gov.uk/bank-holidays.json"; // URL to fetch up to date bank holidays
+const bankHolidays_apiURL = "https://www.gov.uk/bank-holidays.json"; // URL to fetch up to date bank holidays
 
 
 
+
+
+// Prints a themed and formatted message to the developer's console
+function polyfilerLog(message) {
+	console.log("%c[DTX Polyfiller v" + getExtensionVersion() + "]%c: " + message,
+			"font-size: 14px; color: #88f", "font-size: 14px; color: #fff");
+}
 
 // Injects a content script into the page with access to page functions
 function injectScript(scriptStr) {	
@@ -37,25 +44,66 @@ function isDescendant(parent, child) {
 }
 
 
+// Returns true if a date falls on a bank holiday inside JSON events
+function isBankHoliday(selectedDate, holidaysJSON) {
+    for (let i = 0; i < holidaysJSON.length; i++) {
+        let dateObj = new Date(holidaysJSON[i].date);
+		dateObj.setHours(0); // Eliminate British Summer Time
+
+        // Compare milliseconds since the Unix Epoch (JS safe way to compare dates)
+        if (dateObj.getTime() == selectedDate.getTime()) {
+            return true;
+        }
+    }
+    return false;
+}
+
 // Pulls bank holidays from UK gov site and sends them to handler
 function fetchBankHolidaysJSON(callback) {
-    const endpoint = setting_apiURL;
-    fetch(endpoint)
+    fetch(bankHolidays_apiURL)
         .then((response) => response.json())
         .then((data) => callback(data));
 }
 
 
+// Loads bank holidays JSON from cache or downloads it if cache is unset or old
+// Runs callback with parameters:
+//  callback(holidayRegions, holidayEvents)
+function getBankHolidaysJSON(items, callback) {
+    const currentDate = new Date().getTime();
+    const thirtyDays = 30 * 24 * 60 * 60 * 1000;
+    const cacheAvaliable = items.cacheDateBankHolidays && currentDate - thirtyDays < items.cacheDateBankHolidays;
+    
+    if (cacheAvaliable) {
+        polyfilerLog("Loaded bank holidays from cache");
+        callback(items.cacheBankHolidayRegions, items.cacheBankHolidaysEvents);
 
+    } else {
+        polyfilerLog("Pulling bank holidays from " + bankHolidays_apiURL);
+        fetchBankHolidaysJSON((holidaysJSON) => {
+            const bankHolidayRegions = Object.keys(holidaysJSON);
 
-
-// Prints a themed and formatted message to the developer's console
-function polyfilerLog(message) {
-	console.log("%c[DTX Polyfiller v" + getExtensionVersion() + "]%c: " + message,
-			"font-size: 14px; color: #88f", "font-size: 14px; color: #fff");
+            // Get bank holidays table based off user's settings
+			let bankHolidayEvents = holidaysJSON[items.holidayRegion];
+			try {
+				if (!items.holidayRegion) throw "Your bank holiday region is unset!";
+				if (!bankHolidayEvents) throw "Bank holidays JSON from gov.uk didn't contain your region!";
+				bankHolidayEvents = holidaysJSON[items.holidayRegion].events;
+			} catch(e) {
+				throw new Error("ERROR SHOWING BANK HOLIDAYS:\n" + e);
+            }
+            
+            chrome.storage.sync.set({
+                cacheBankHolidayRegions: bankHolidayRegions,
+                cacheBankHolidaysEvents: bankHolidayEvents,
+                cacheDateBankHolidays: currentDate
+            },
+            function() {
+                callback(bankHolidayRegions, bankHolidayEvents)
+            });
+        });
+    }
 }
-
-
 
 
 
@@ -127,7 +175,7 @@ function assembleToken() {
 
 function assignSpecialToken(callback) {
 	var newToken = assembleToken();
-	chrome.storage.sync.set({specialToken: newToken}, function() {
+	chrome.storage.sync.set({specialToken: newToken}, () => {
 		if (callback) callback(newToken);
 	});
 }
@@ -145,7 +193,7 @@ function savePrepEmployeeNumber(specialToken, employeeNumber) {
 
 
 // Load settings from storage (with defaults) and run a given function
-function loadExtensionSettings(callback) {
+function LoadExtensionSettings(callback) {
     chrome.storage.sync.get({
         lastVersionUsed: null,
 
@@ -154,7 +202,10 @@ function loadExtensionSettings(callback) {
         selectHours: 7.5,
 
         showBankHolidays: true,
-        holidayRegion: 'england-and-wales',
+        holidayRegion: "england-and-wales",
+        cacheBankHolidaysEvents: null,
+        cacheBankHolidayRegions: null,
+        cacheDateBankHolidays: null,
 
         autoLogin: false,
         employeeNumber: "",
@@ -170,5 +221,8 @@ function loadExtensionSettings(callback) {
         patternFill_daysOff: 4,
         patternFill_includeBankHolidays: true,
 
-    }, (items) => callback(items));
+    }, (items) => {
+        if (!items.holidayRegion || items.holidayRegion.trim() == "") items.holidayRegion = "england-and-wales";
+        callback(items);
+    });
 }

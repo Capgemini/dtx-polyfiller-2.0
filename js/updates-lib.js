@@ -1,3 +1,12 @@
+/*
+    update-lib.js
+     This file contains a collection of functions to get the current version.
+     It also contains update-specific fixes to repair user-data after changing versions
+*/
+
+
+
+
 
 // Set to true to simulate update from < 2.8.5
 /*
@@ -11,7 +20,7 @@
 
 
 // Cache extension version
-var extensionVersion = chrome.runtime.getManifest().version;
+const extensionVersion = chrome.runtime.getManifest().version;
 
 // Gets version number as a string (e.g. 1.2.4)
 function getExtensionVersion() {
@@ -22,7 +31,7 @@ function getExtensionVersion() {
 function updateExtensionVersion(callback) {
 	chrome.storage.sync.set({
 		lastVersionUsed: getExtensionVersion(),
-	}, function() {
+	}, () => {
 		if (callback) callback();
 	});
 }
@@ -37,13 +46,13 @@ function applyUpdateFixes(items) {
         // If employeeNumber is set, repair it
         if (items.employeeNumber) {
             
-            assignSpecialToken(function(newToken) {
+            assignSpecialToken((newToken) => {
                 chrome.storage.sync.set({
                     employeeNumber: savePrepEmployeeNumber(newToken, items.employeeNumber)
-                }, function() {
+                }, () => {
                     // Update version number before reloading to prevent
                     // Fix being re-ran on reload
-                    updateExtensionVersion(function() {
+                    updateExtensionVersion(() => {
                         location.reload(); // Reload page to apply auto-login						
                     });
                 });
