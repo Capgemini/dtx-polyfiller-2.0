@@ -1,3 +1,9 @@
+/*
+	dtx.js
+     This file handles features added across the entire site.
+     For example: Browser fixes, highlighting bank holidays in calendar views, handling logouts etc.
+*/
+
 
 // Forcefully shows invisible buttons
 // This fixes some browser compatibility issues 
