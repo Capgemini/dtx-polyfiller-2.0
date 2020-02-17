@@ -201,6 +201,8 @@ function LoadExtensionSettings(callback) {
         selectMode: true,
         selectHours: 7.5,
 
+        fixSummaryTable: false,
+
         showBankHolidays: true,
         holidayRegion: "england-and-wales",
         cacheBankHolidaysEvents: null,

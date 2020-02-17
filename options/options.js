@@ -8,6 +8,7 @@ function reset_options() {
 // Saves options to chrome.storage
 function save_options() {
 	var shortcutKeys = document.getElementById('shortcutKeys').checked;
+	var fixSummaryTable = document.getElementById('fixSummaryTable').checked;
 	var selectMode = document.getElementById('selectMode').checked;
 	var selectHours = parseFloat(document.getElementById('selectHours').value) || 7.5;
 	
@@ -27,12 +28,16 @@ function save_options() {
 		
 		chrome.storage.sync.set({
 			shortcutKeys: shortcutKeys,
+			fixSummaryTable: fixSummaryTable,
 			selectMode: selectMode,
 			selectHours: selectHours,
+
 			showBankHolidays: showBankHolidays,
 			holidayRegion: holidayRegion,
+
 			autoLogin: autoLogin,
 			employeeNumber: savePrepEmployeeNumber(items.specialToken, employeeNumber),
+
 			autoFillFields: autoFillFields,
 			autoFillTaskNumber: autoFillTaskNumber,
 			autoFillProjectCode: autoFillProjectCode,
@@ -82,6 +87,7 @@ function load_options() {
 		if (!items.specialToken) assignSpecialToken();
 		
 		document.getElementById('shortcutKeys').checked = items.shortcutKeys;
+		document.getElementById('fixSummaryTable').checked = items.fixSummaryTable;
 		document.getElementById('selectMode').checked = items.selectMode;
 		document.getElementById('selectHours').value = items.selectHours;
 		

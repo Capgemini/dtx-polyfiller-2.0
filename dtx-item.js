@@ -336,6 +336,11 @@ function autoFillProjectCode(projectCode) {
 }
 
 
+// Characters like "&" are blocked from the "Task ID" field, despite being allowed in Win DTX
+// Strangely, they're also only blocked onkeydown and can be easily copy-pasted in by anyone
+function bypassBlockedNonAlphanumericChars() {
+	injectScript(`returnTextNumeric = function() { return true }`);
+}
 
 
 
@@ -350,7 +355,9 @@ async function ItemPageScripts(items) {
         items.patternFill_daysOff,
         items.patternFill_includeBankHolidays,
         items.selectHours
-    );
+	);
+	
+	bypassBlockedNonAlphanumericChars();
 
     if (items.autoFillFields) {
         autoFillTaskNumber(items.autoFillTaskNumber);

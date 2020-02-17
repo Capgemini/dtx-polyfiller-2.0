@@ -55,6 +55,15 @@
 		},
 		{
 			"matches":[
+				"*://*.capgemini.com/DTX.NET/Summary.aspx"
+			],
+			"run_at": "document_idle",
+			"js":[
+				"dtx-summary.js"
+			]
+		},
+		{
+			"matches":[
 				"*://*.capgemini.com/DTX.NET/item.aspx*"
 			],
 			"run_at": "document_idle",

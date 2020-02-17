@@ -29,7 +29,7 @@ a.actionIcon {
     display: block;
 }
 
-/* Replace horrid comic sans and red-on-blue font */
+/* Replace comic sans and red-on-blue font for DTX text (page top-right) */
 span.dtxTitle {
 	font-family: "Trebuchet MS", serif !important;
 	color: #000 !important;
@@ -39,4 +39,25 @@ span.dtxTitle {
 #ImgCGLogo {
 	height: 30px;
     padding: 5px;
+}
+
+
+
+/*
+	* Fix summary table header text aligning to top of cells
+	* Remove ugly 3D border that misaligns cells 
+*/
+#uwgItems_hdiv > table > thead > tr > th {
+	vertical-align: middle;
+	border-left-width: 0px;
+	border-top-width: 0px;
+}
+
+/*
+	* Disable padding of numeric cells in summary table as this causes eventual inalignment along the table
+	* Center the text for easy readability
+*/
+.dtxMainData tr > td.num {
+	padding-right: 0px;
+	text-align: center;
 }
