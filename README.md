@@ -54,4 +54,4 @@ If you find a bug, please [raise an issue](../../issues)!
 
 
 ## Other
-[Privacy policy](https://github.com/FreddieDev/dtx-polyfiller-2.0/blob/master/PRIVACY-POLICY.md)
+[Privacy policy](https://github.com/Capgemini/dtx-polyfiller-2.0/blob/master/PRIVACY-POLICY.md)
