@@ -1,9 +1,11 @@
 
 // Corrects summary table column widths on Chrome
 function fixColumnWidths() {
-    let tableWidthElems = document.querySelectorAll("#G_uwgItems colgroup col");
 
+	// Assemble array of correct widths for each column
+	// These are declared in the page but ignored by modern browsers
     let tableColumnWidths = [];
+    const tableWidthElems = document.querySelectorAll("#G_uwgItems colgroup col");
     tableWidthElems.forEach(elem => {
         tableColumnWidths.push(elem.width);
     });

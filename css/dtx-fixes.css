@@ -61,3 +61,8 @@ span.dtxTitle {
 	padding-right: 0px;
 	text-align: center;
 }
+
+/* Only show summary table scrollbars when necessary */
+#uwgItems_div {
+	overflow: auto !important; /* !important to override inline styling */
+}
